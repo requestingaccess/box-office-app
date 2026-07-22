@@ -66,13 +66,13 @@ export const MovieFeed: React.FC<MovieFeedProps> = ({ movies, userPredictions, o
           <div>
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-red-100 border border-red-300 text-red-800 text-xs font-black uppercase tracking-wider mb-2">
               <Ticket className="w-3.5 h-3.5" />
-              <span>DIRECT TICKET FLIGHT & STUBLESS CARD TRANSFORMATION</span>
+              <span>SHORTENED STUBLESS TICKETS & EXPOSED ETCHED RECORDS</span>
             </div>
             <h1 className="text-3xl font-black tracking-tight text-stone-900 font-serif">
               Box Office <span className="text-amber-800 underline decoration-amber-500/50">Ticket Stub Predictions</span>
             </h1>
             <p className="mt-1.5 text-xs text-stone-700 max-w-2xl leading-relaxed">
-              Click a ticket to <strong className="text-stone-950">fly it directly to the center of the screen</strong>. Punch your guess to physically tear off and toss the stub, leaving your prediction <span className="text-amber-900 font-extrabold">etched into the paper table</span> behind a stubless ticket!
+              Click a ticket to <strong className="text-stone-950">fly it to the center of the screen</strong>. Punching your guess tears off the stub permanently—shortening the ticket and exposing your prediction <span className="text-amber-900 font-extrabold">etched into the paper table</span> right beside it!
             </p>
           </div>
 
@@ -151,7 +151,7 @@ export const MovieFeed: React.FC<MovieFeedProps> = ({ movies, userPredictions, o
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
         {filteredMovies.map((movie, idx) => {
           const userPred = userPredictions.find((p) => p.movieId === movie.id);
-          const serialNum = `STUB-2026-${(5000 + idx * 67).toString()}`;
+          const serialNum = `STUB-2026-${(6000 + idx * 43).toString()}`;
           const skewClass = skewClasses[idx % skewClasses.length];
           const isSelected = selectedMovieId === movie.id;
 
@@ -174,7 +174,7 @@ export const MovieFeed: React.FC<MovieFeedProps> = ({ movies, userPredictions, o
   );
 };
 
-// Component for Individual Ticket Card with Direct Flight & Physical Stub Tear-Off
+// Component for Individual Ticket Card with Direct Flight & Shortened Stubless Card Shape
 interface DirectFlightTicketCardProps {
   movie: Movie;
   userPrediction?: Prediction;
@@ -220,7 +220,6 @@ const DirectFlightTicketCard: React.FC<DirectFlightTicketCardProps> = ({
     e.preventDefault();
     if (numericAmount <= 0) return;
 
-    // Start tear animation sequence
     setIsTearing(true);
 
     try {
@@ -245,28 +244,29 @@ const DirectFlightTicketCard: React.FC<DirectFlightTicketCardProps> = ({
   const sampleScoring = calculateScore(numericAmount, numericAmount > 0 ? numericAmount : 100000000, new Date().toISOString(), movie.releaseDate);
 
   return (
-    <div className="relative">
+    <div className="relative min-h-[220px]">
       
-      {/* ETCHED BACKGROUND RECORD LAYER (Punched into paper table surface behind stub slot) */}
-      <div className="absolute inset-0 p-4 rounded-2xl etched-paper-box flex items-center justify-between pointer-events-none z-0">
-        <div className="pl-4">
-          <div className="text-[9px] uppercase font-black etched-paper-text tracking-widest">
-            TABLE ETCHED PREDICTION RECORD
-          </div>
-          <div className="text-xl font-black font-mono etched-paper-text">
-            {hasSubmittedPrediction ? formatCurrency(userPrediction!.predictedRevenue) : 'STUB PENDING PUNCH'}
-          </div>
+      {/* ETCHED BACKGROUND TABLE RECORD (Positioned specifically in the right slot for 100% visibility behind shortened ticket) */}
+      <div className="absolute inset-0 p-3.5 rounded-2xl etched-paper-box flex items-center justify-between pointer-events-none z-0">
+        {/* Left background info */}
+        <div className="pl-3 opacity-40">
+          <div className="text-[8px] font-mono uppercase text-stone-600">FILM ID: {movie.id}</div>
+          <div className="text-[9px] font-bold text-stone-700">RELEASE: {movie.releaseDate}</div>
         </div>
 
+        {/* Right etched prediction record (Fully exposed when right stub is torn away) */}
         <div className="pr-4 text-right">
+          <div className="text-[9px] uppercase font-black etched-paper-text tracking-wider">
+            TABLE ETCHED RECORD
+          </div>
+          <div className="text-lg font-black font-mono etched-paper-text">
+            {hasSubmittedPrediction ? formatCurrency(userPrediction!.predictedRevenue) : 'STUB PENDING PUNCH'}
+          </div>
           {hasSubmittedPrediction && (
-            <div className="text-[11px] font-black etched-paper-text">
+            <div className="text-[10px] font-black etched-paper-text">
               EARLY BIRD: {userPrediction!.earlyBirdMultiplier}X
             </div>
           )}
-          <div className="text-[9px] font-mono etched-paper-text">
-            {hasSubmittedPrediction ? `PUNCHED: ${new Date(userPrediction!.submittedAt).toLocaleDateString()}` : 'UNPUNCHED'}
-          </div>
         </div>
       </div>
 
@@ -274,14 +274,18 @@ const DirectFlightTicketCard: React.FC<DirectFlightTicketCardProps> = ({
       <div
         onClick={() => !isSelected && movie.status === 'open' && onSelectTicket()}
         className={`borderless-ticket-stub rounded-2xl overflow-visible cursor-pointer relative ${
-          isSelected ? 'ticket-stage-centered' : skewClass
+          isSelected
+            ? 'ticket-stage-centered'
+            : hasSubmittedPrediction
+            ? `${skewClass} w-full sm:w-[72%] rounded-r-none` // SHORTENED STUBLESS TICKET WIDTH!
+            : `${skewClass} w-full`
         }`}
       >
-        {/* 4 Corner Cutouts */}
+        {/* Corner Cutouts */}
         <div className="ticket-corner-tl" />
-        <div className="ticket-corner-tr" />
         <div className="ticket-corner-bl" />
-        <div className="ticket-corner-br" />
+        {!hasSubmittedPrediction && <div className="ticket-corner-tr" />}
+        {!hasSubmittedPrediction && <div className="ticket-corner-br" />}
 
         {/* Deselect Close Button (Visible when Centered) */}
         {isSelected && (
@@ -368,16 +372,16 @@ const DirectFlightTicketCard: React.FC<DirectFlightTicketCardProps> = ({
 
           </div>
 
-          {/* VERTICAL PERFORATION DIVIDER (Only shown if stub is present) */}
-          {!hasSubmittedPrediction && (
+          {/* VERTICAL PERFORATION DIVIDER (Only shown if stub is present or when centered) */}
+          {(!hasSubmittedPrediction || isSelected) && (
             <div className="ticket-vertical-perforation relative hidden sm:block">
               <div className="ticket-notch-top -left-[12px]" />
               <div className="ticket-notch-bottom -left-[12px]" />
             </div>
           )}
 
-          {/* RIGHT TEAR-OFF STUB (OR STUBLESS TORN EFFECT WHEN SUBMITTED) */}
-          {!hasSubmittedPrediction ? (
+          {/* RIGHT TEAR-OFF STUB (ONLY SHOWN IF STUB HAS NOT BEEN TORN OFF, OR WHEN CENTERED IN INSPECTION STAGE) */}
+          {(!hasSubmittedPrediction || isSelected) && (
             <div
               className={`sm:w-60 p-4 bg-[#f4efdf] flex flex-col justify-between space-y-3 border-t sm:border-t-0 border-stone-300 rounded-b-2xl sm:rounded-b-none sm:rounded-r-2xl ${
                 isTearing ? 'animate-stub-toss' : ''
@@ -394,7 +398,7 @@ const DirectFlightTicketCard: React.FC<DirectFlightTicketCardProps> = ({
                   <div>
                     <div className="text-[8px] uppercase font-black text-stone-500 tracking-wider">Punched Guess</div>
                     <div className="text-xl font-black text-amber-900 font-mono tracking-tight">
-                      $0
+                      {hasSubmittedPrediction ? formatCurrency(userPrediction!.predictedRevenue) : '$0'}
                     </div>
                   </div>
 
@@ -407,7 +411,7 @@ const DirectFlightTicketCard: React.FC<DirectFlightTicketCardProps> = ({
                       className="w-full py-2 px-3 rounded-lg bg-amber-700 hover:bg-amber-800 text-amber-50 font-black text-[11px] uppercase tracking-wider transition-all flex items-center justify-center space-x-1 shadow-sm"
                     >
                       <Ticket className="w-3.5 h-3.5" />
-                      <span>INSPECT & PUNCH</span>
+                      <span>{hasSubmittedPrediction ? 'RE-PUNCH STUB' : 'INSPECT & PUNCH'}</span>
                     </button>
                   )}
                 </>
@@ -479,11 +483,6 @@ const DirectFlightTicketCard: React.FC<DirectFlightTicketCardProps> = ({
                   </button>
                 </form>
               )}
-            </div>
-          ) : (
-            // STUBLESS TICKET EDGE DISPLAY (STUB HAS BEEN TEARD AWAY PERMANENTLY)
-            <div className="hidden lg:flex items-center justify-center w-12 bg-transparent">
-              {/* Stub is physically absent, exposing the etched record on the paper background behind it */}
             </div>
           )}
 
