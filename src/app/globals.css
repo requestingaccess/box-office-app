@@ -2,132 +2,129 @@
 
 @layer base {
   :root {
-    --bg-cinema: #090d16;
-    --bg-stub: #fef9c3;
-    --bg-stub-alt: #fef08a;
-    --text-stub: #1e1b4b;
-    --red-marquee: #dc2626;
-    --gold-marquee: #f59e0b;
-    --border-ticket: #f59e0b;
+    --bg-parchment: #f4efdf;
+    --bg-paper-card: #fcf9f2;
+    --bg-paper-hover: #ffffff;
+    --border-paper: #e2d8c3;
+    --border-paper-dark: #c8bba2;
+    --text-ink: #1c1917;
+    --text-ink-muted: #57534e;
+    --cinema-red: #dc2626;
+    --cinema-gold: #d97706;
+    --cinema-green: #15803d;
   }
 
   body {
-    background-color: var(--bg-cinema);
-    color: #f8fafc;
+    background-color: var(--bg-parchment);
+    background-image: radial-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 0);
+    background-size: 24px 24px;
+    color: var(--text-ink);
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     min-height: 100vh;
     overflow-x: hidden;
   }
 }
 
-/* Custom scrollbars */
+/* Custom Paper Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #090d16;
+  background: #f4efdf;
 }
 ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #c8bba2;
   border-radius: 4px;
 }
+::-webkit-scrollbar-thumb:hover {
+  background: #a89a80;
+}
 
-/* Retro Ticket Stub Styling */
+/* Ticket Stub Cards */
 .ticket-stub {
-  background-color: #fef3c7;
-  color: #1e1b4b;
+  background-color: var(--bg-paper-card);
+  border: 2px solid var(--border-paper-dark);
+  box-shadow: 0 4px 20px -2px rgba(28, 25, 23, 0.08), 0 2px 6px -1px rgba(28, 25, 23, 0.04);
   position: relative;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(245, 158, 11, 0.3);
+  transition: all 0.25s ease;
 }
 
-.ticket-stub-dark {
-  background-color: #0f172a;
-  color: #f8fafc;
-  position: relative;
-  border: 1px solid rgba(245, 158, 11, 0.3);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6);
+.ticket-stub:hover {
+  background-color: var(--bg-paper-hover);
+  border-color: var(--cinema-gold);
+  box-shadow: 0 10px 25px -3px rgba(217, 119, 6, 0.15), 0 4px 10px -2px rgba(28, 25, 23, 0.08);
+  transform: translateY(-2px);
 }
 
-/* Perforated tear line between stubs */
+/* Perforation Divider Line */
 .ticket-perforation {
-  border-left: 2px dashed rgba(30, 27, 75, 0.25);
+  border-top: 2px dashed #c8bba2;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
   position: relative;
 }
 
-.ticket-perforation-dark {
-  border-left: 2px dashed rgba(245, 158, 11, 0.3);
-  position: relative;
-}
-
-/* Ticket Notches */
-.ticket-stub::before,
-.ticket-stub::after {
-  content: '';
+/* Side Notches for Authentic Ticket Shape */
+.ticket-notch-left {
   position: absolute;
+  left: -12px;
+  top: 50%;
+  transform: translateY(-50%);
   width: 20px;
   height: 20px;
-  background-color: #090d16;
-  border-radius: 50%;
+  background-color: var(--bg-parchment);
+  border-right: 2px solid var(--border-paper-dark);
+  border-radius: 0 50% 50% 0;
   z-index: 10;
 }
 
-.ticket-notch-top {
-  top: -10px;
-  right: 28%;
+.ticket-notch-right {
+  position: absolute;
+  right: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  background-color: var(--bg-parchment);
+  border-left: 2px solid var(--border-paper-dark);
+  border-radius: 50% 0 0 50%;
+  z-index: 10;
 }
 
-.ticket-notch-bottom {
-  bottom: -10px;
-  right: 28%;
-}
-
-/* Rubber Stamp Styling */
-.rubber-stamp {
-  display: inline-block;
-  padding: 0.25rem 0.6rem;
-  text-transform: uppercase;
+/* Ink Stamp Badges */
+.ink-stamp {
+  border: 2px solid currentColor;
+  padding: 0.2rem 0.6rem;
   font-weight: 900;
+  text-transform: uppercase;
   letter-spacing: 0.1em;
-  border: 3px double currentColor;
   border-radius: 4px;
+  display: inline-block;
   transform: rotate(-3deg);
-  box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
-  font-family: monospace;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-.stamp-green {
-  color: #059669;
-  border-color: #059669;
-  background-color: rgba(16, 185, 129, 0.1);
-}
-
-.stamp-red {
+.ink-stamp-red {
   color: #dc2626;
   border-color: #dc2626;
-  background-color: rgba(220, 38, 38, 0.1);
+  background-color: rgba(220, 38, 38, 0.06);
 }
 
-.stamp-amber {
-  color: #d97706;
-  border-color: #d97706;
-  background-color: rgba(217, 119, 6, 0.1);
+.ink-stamp-gold {
+  color: #b45309;
+  border-color: #b45309;
+  background-color: rgba(180, 83, 9, 0.06);
 }
 
-.stamp-blue {
-  color: #2563eb;
-  border-color: #2563eb;
-  background-color: rgba(37, 99, 235, 0.1);
+.ink-stamp-green {
+  color: #15803d;
+  border-color: #15803d;
+  background-color: rgba(21, 128, 61, 0.06);
 }
 
-/* Monospace Ledger Text */
-.font-ledger {
-  font-family: 'Courier New', Courier, monospace;
-}
-
-/* Retro Marquee Text */
-.marquee-text {
-  font-family: impact, system-ui, sans-serif;
-  letter-spacing: 0.05em;
-  text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+.paper-panel {
+  background-color: var(--bg-paper-card);
+  border: 2px solid var(--border-paper-dark);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }

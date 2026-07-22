@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Film, Trophy, User as UserIcon, HelpCircle, Cpu, Calendar, ChevronDown, CheckCircle, Ticket } from 'lucide-react';
+import { Ticket, Trophy, User as UserIcon, HelpCircle, Cpu, Calendar, ChevronDown, CheckCircle2 } from 'lucide-react';
 import { User } from '@/lib/types';
 
 interface NavbarProps {
@@ -27,95 +27,92 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [showUserDropdown, setShowUserDropdown] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-slate-950 border-b-2 border-amber-600/80 shadow-2xl font-ledger">
+    <header className="sticky top-0 z-40 w-full bg-[#f4efdf] border-b-2 border-[#c8bba2] shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-20">
+        <div className="flex items-center justify-between h-20">
           
-          {/* Box Office Brand Logo */}
+          {/* Brand Logo - Vintage Box Office Counter */}
           <div className="flex items-center space-x-3 cursor-pointer" onClick={() => setActiveTab('feed')}>
-            <div className="w-10 h-10 rounded bg-amber-500 text-slate-950 flex items-center justify-center border-2 border-amber-400 shadow-md shrink-0">
-              <Ticket className="w-6 h-6 fill-slate-950 stroke-none" />
+            <div className="w-11 h-11 rounded-xl bg-amber-600 border-2 border-amber-800 text-amber-100 flex items-center justify-center shadow-md transform -rotate-2">
+              <Ticket className="w-6 h-6 stroke-[2.5]" />
             </div>
             <div>
-              <span className="text-lg sm:text-xl font-black uppercase tracking-wider text-white">
-                BOX OFFICE <span className="text-amber-400">STUB</span>
+              <div className="text-xs font-black tracking-widest text-red-700 uppercase">OFFICIAL CINEMA STUB</div>
+              <span className="text-2xl font-black tracking-tight text-stone-900 font-serif">
+                BOX OFFICE <span className="text-amber-700 underline decoration-amber-500/60 decoration-2">PRO</span>
               </span>
-              <div className="flex items-center space-x-1 text-[11px] text-amber-200/80">
-                <Calendar className="w-3 h-3 text-amber-400" />
-                <span>Summer Blockbuster 2026</span>
-              </div>
             </div>
           </div>
 
-          {/* Navigation Links */}
-          <nav className="hidden md:flex items-center space-x-1 bg-slate-900 p-1.5 rounded-lg border border-slate-800">
+          {/* Navigation Links - Ticket Stub Tabs */}
+          <nav className="hidden md:flex items-center space-x-2 bg-[#e8dec7] p-1.5 rounded-xl border border-[#c8bba2]">
             <button
               onClick={() => setActiveTab('feed')}
-              className={`flex items-center space-x-2 px-3.5 py-1.5 rounded text-xs font-black uppercase tracking-wider transition-all ${
+              className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-xs font-extrabold transition-all ${
                 activeTab === 'feed'
-                  ? 'bg-amber-500 text-slate-950 shadow border border-amber-400'
-                  : 'text-slate-300 hover:text-amber-400 hover:bg-slate-800'
+                  ? 'bg-[#fcf9f2] text-amber-900 border-2 border-amber-700 shadow-sm'
+                  : 'text-stone-700 hover:text-stone-950 hover:bg-[#dfd3b9]'
               }`}
             >
-              <Ticket className="w-3.5 h-3.5" />
-              <span>Ticket Window</span>
+              <Ticket className="w-4 h-4" />
+              <span>TICKET FEED</span>
             </button>
 
             <button
               onClick={() => setActiveTab('leaderboard')}
-              className={`flex items-center space-x-2 px-3.5 py-1.5 rounded text-xs font-black uppercase tracking-wider transition-all ${
+              className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-xs font-extrabold transition-all ${
                 activeTab === 'leaderboard'
-                  ? 'bg-amber-500 text-slate-950 shadow border border-amber-400'
-                  : 'text-slate-300 hover:text-amber-400 hover:bg-slate-800'
+                  ? 'bg-[#fcf9f2] text-amber-900 border-2 border-amber-700 shadow-sm'
+                  : 'text-stone-700 hover:text-stone-950 hover:bg-[#dfd3b9]'
               }`}
             >
-              <Trophy className="w-3.5 h-3.5" />
-              <span>Box Office Ledger</span>
+              <Trophy className="w-4 h-4" />
+              <span>LEADERBOARD</span>
             </button>
 
             <button
               onClick={() => setActiveTab('profile')}
-              className={`flex items-center space-x-2 px-3.5 py-1.5 rounded text-xs font-black uppercase tracking-wider transition-all ${
+              className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-xs font-extrabold transition-all ${
                 activeTab === 'profile'
-                  ? 'bg-amber-500 text-slate-950 shadow border border-amber-400'
-                  : 'text-slate-300 hover:text-amber-400 hover:bg-slate-800'
+                  ? 'bg-[#fcf9f2] text-amber-900 border-2 border-amber-700 shadow-sm'
+                  : 'text-stone-700 hover:text-stone-950 hover:bg-[#dfd3b9]'
               }`}
             >
-              <UserIcon className="w-3.5 h-3.5" />
-              <span>Analyst Profile</span>
+              <UserIcon className="w-4 h-4" />
+              <span>MY STUBS</span>
             </button>
 
             <button
               onClick={() => setActiveTab('rules')}
-              className={`flex items-center space-x-2 px-3.5 py-1.5 rounded text-xs font-black uppercase tracking-wider transition-all ${
+              className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-xs font-extrabold transition-all ${
                 activeTab === 'rules'
-                  ? 'bg-amber-500 text-slate-950 shadow border border-amber-400'
-                  : 'text-slate-300 hover:text-amber-400 hover:bg-slate-800'
+                  ? 'bg-[#fcf9f2] text-amber-900 border-2 border-amber-700 shadow-sm'
+                  : 'text-stone-700 hover:text-stone-950 hover:bg-[#dfd3b9]'
               }`}
             >
-              <HelpCircle className="w-3.5 h-3.5" />
-              <span>Scoring Rules</span>
+              <HelpCircle className="w-4 h-4" />
+              <span>RATE CARD</span>
             </button>
           </nav>
 
           {/* Right Controls */}
           <div className="flex items-center space-x-3">
             
-            {/* Cron Pipeline Control Button */}
+            {/* Pipeline Control Button */}
             <div className="relative">
               <button
                 onClick={() => setShowPipelineMenu(!showPipelineMenu)}
-                className="flex items-center space-x-1.5 px-3 py-1.5 text-xs font-bold rounded bg-indigo-950/80 border border-indigo-500/40 text-indigo-300 hover:bg-indigo-900 transition-all shadow-sm"
+                className="flex items-center space-x-1.5 px-3 py-2 text-xs font-bold rounded-lg bg-amber-100 border-2 border-amber-700 text-amber-900 hover:bg-amber-200 transition-all shadow-sm"
               >
-                <Cpu className="w-3.5 h-3.5 text-indigo-400 animate-pulse" />
-                <span className="hidden sm:inline">Cron Jobs</span>
-                <ChevronDown className="w-3 h-3" />
+                <Cpu className="w-3.5 h-3.5 text-amber-700" />
+                <span className="hidden sm:inline font-mono">KIOSK CRON</span>
+                <ChevronDown className="w-3.5 h-3.5" />
               </button>
 
               {showPipelineMenu && (
-                <div className="absolute right-0 mt-2 w-72 bg-slate-900 rounded-xl shadow-2xl p-3 border-2 border-slate-700 z-50">
-                  <div className="text-[10px] font-black text-amber-400 uppercase tracking-widest mb-2 px-1">
-                    Simulate Scheduled Cron Jobs
+                <div className="absolute right-0 mt-2 w-72 paper-panel rounded-xl shadow-2xl p-3 border-2 border-stone-400 z-50">
+                  <div className="text-[10px] font-black text-stone-500 uppercase tracking-widest mb-2 px-1 border-b border-stone-300 pb-1">
+                    Simulate Scheduled Kiosk Jobs
                   </div>
                   <div className="space-y-1.5">
                     <button
@@ -124,10 +121,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onRunPipelineJob('tmdb-sync');
                         setShowPipelineMenu(false);
                       }}
-                      className="w-full text-left px-3 py-2 rounded bg-slate-950 hover:bg-slate-800 text-xs font-bold text-slate-200 hover:text-amber-400 transition-all border border-slate-800 flex items-center justify-between"
+                      className="w-full text-left px-3 py-2 rounded-lg bg-[#fcf9f2] hover:bg-amber-100 text-xs font-bold text-stone-800 transition-all border border-stone-300 flex items-center justify-between"
                     >
                       <span>1. TMDB Sync (Daily 2 AM)</span>
-                      <CheckCircle className="w-3.5 h-3.5 text-slate-500" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-stone-500" />
                     </button>
                     <button
                       disabled={isPipelineRunning}
@@ -135,10 +132,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onRunPipelineJob('lock-predictions');
                         setShowPipelineMenu(false);
                       }}
-                      className="w-full text-left px-3 py-2 rounded bg-slate-950 hover:bg-slate-800 text-xs font-bold text-slate-200 hover:text-amber-400 transition-all border border-slate-800 flex items-center justify-between"
+                      className="w-full text-left px-3 py-2 rounded-lg bg-[#fcf9f2] hover:bg-amber-100 text-xs font-bold text-stone-800 transition-all border border-stone-300 flex items-center justify-between"
                     >
-                      <span>2. Lock Tickets (Thu 3 PM EST)</span>
-                      <CheckCircle className="w-3.5 h-3.5 text-amber-500" />
+                      <span>2. Lock Predictions (Thu 3 PM)</span>
+                      <CheckCircle2 className="w-3.5 h-3.5 text-amber-700" />
                     </button>
                     <button
                       disabled={isPipelineRunning}
@@ -146,10 +143,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onRunPipelineJob('scrape-estimates');
                         setShowPipelineMenu(false);
                       }}
-                      className="w-full text-left px-3 py-2 rounded bg-slate-950 hover:bg-slate-800 text-xs font-bold text-slate-200 hover:text-amber-400 transition-all border border-slate-800 flex items-center justify-between"
+                      className="w-full text-left px-3 py-2 rounded-lg bg-[#fcf9f2] hover:bg-amber-100 text-xs font-bold text-stone-800 transition-all border border-stone-300 flex items-center justify-between"
                     >
                       <span>3. Scrape Estimates (Sun 12 PM)</span>
-                      <CheckCircle className="w-3.5 h-3.5 text-blue-500" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-blue-700" />
                     </button>
                     <button
                       disabled={isPipelineRunning}
@@ -157,35 +154,35 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onRunPipelineJob('score-actuals');
                         setShowPipelineMenu(false);
                       }}
-                      className="w-full text-left px-3 py-2 rounded bg-slate-950 hover:bg-slate-800 text-xs font-bold text-slate-200 hover:text-amber-400 transition-all border border-slate-800 flex items-center justify-between"
+                      className="w-full text-left px-3 py-2 rounded-lg bg-[#fcf9f2] hover:bg-amber-100 text-xs font-bold text-stone-800 transition-all border border-stone-300 flex items-center justify-between"
                     >
                       <span>4. Scrape Actuals & Score (Mon 4 PM)</span>
-                      <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
                     </button>
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Active User Switcher */}
+            {/* Active User Avatar & Switcher */}
             <div className="relative">
               <button
                 onClick={() => setShowUserDropdown(!showUserDropdown)}
-                className="flex items-center space-x-2 pl-2 pr-3 py-1 rounded bg-slate-900 border border-slate-800 hover:border-amber-500 transition-all"
+                className="flex items-center space-x-2 pl-2 pr-3 py-1.5 rounded-full bg-[#fcf9f2] border-2 border-stone-400 hover:border-amber-700 transition-all"
               >
                 <img
                   src={activeUser.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb'}
                   alt={activeUser.username}
-                  className="w-6 h-6 rounded-full object-cover border border-amber-400"
+                  className="w-7 h-7 rounded-full object-cover ring-2 ring-amber-600"
                 />
-                <span className="text-xs font-bold text-slate-200 hidden sm:inline">{activeUser.username}</span>
-                <ChevronDown className="w-3 h-3 text-slate-400" />
+                <span className="text-xs font-extrabold text-stone-900 hidden sm:inline">{activeUser.username}</span>
+                <ChevronDown className="w-3.5 h-3.5 text-stone-600" />
               </button>
 
               {showUserDropdown && (
-                <div className="absolute right-0 mt-2 w-56 bg-slate-900 rounded-xl shadow-2xl p-2 border-2 border-slate-700 z-50">
-                  <div className="text-[10px] font-black text-amber-400 uppercase tracking-wider mb-2 px-2 py-1">
-                    Switch Active Guest Handle
+                <div className="absolute right-0 mt-2 w-56 paper-panel rounded-xl shadow-2xl p-2 border-2 border-stone-400 z-50">
+                  <div className="text-[10px] font-black text-stone-500 uppercase tracking-widest mb-2 px-2 py-1 border-b border-stone-300">
+                    Select Player Account
                   </div>
                   <div className="space-y-1">
                     {users.map((user) => (
@@ -195,10 +192,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                           onSelectUser(user.id);
                           setShowUserDropdown(false);
                         }}
-                        className={`w-full text-left px-2 py-1.5 rounded text-xs font-bold flex items-center space-x-2 transition-all ${
+                        className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-bold flex items-center space-x-2 transition-all ${
                           user.id === activeUser.id
-                            ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
-                            : 'text-slate-300 hover:bg-slate-800'
+                            ? 'bg-amber-100 text-amber-900 border border-amber-500'
+                            : 'text-stone-700 hover:bg-[#e8dec7]'
                         }`}
                       >
                         <img src={user.avatarUrl} alt={user.username} className="w-5 h-5 rounded-full object-cover" />
@@ -212,47 +209,6 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           </div>
         </div>
-
-        {/* Mobile Navigation */}
-        <div className="flex md:hidden border-t border-slate-800 py-2 justify-around">
-          <button
-            onClick={() => setActiveTab('feed')}
-            className={`text-[10px] font-black uppercase flex flex-col items-center space-y-0.5 ${
-              activeTab === 'feed' ? 'text-amber-400' : 'text-slate-400'
-            }`}
-          >
-            <Ticket className="w-4 h-4" />
-            <span>Window</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('leaderboard')}
-            className={`text-[10px] font-black uppercase flex flex-col items-center space-y-0.5 ${
-              activeTab === 'leaderboard' ? 'text-amber-400' : 'text-slate-400'
-            }`}
-          >
-            <Trophy className="w-4 h-4" />
-            <span>Ledger</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('profile')}
-            className={`text-[10px] font-black uppercase flex flex-col items-center space-y-0.5 ${
-              activeTab === 'profile' ? 'text-amber-400' : 'text-slate-400'
-            }`}
-          >
-            <UserIcon className="w-4 h-4" />
-            <span>Profile</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('rules')}
-            className={`text-[10px] font-black uppercase flex flex-col items-center space-y-0.5 ${
-              activeTab === 'rules' ? 'text-amber-400' : 'text-slate-400'
-            }`}
-          >
-            <HelpCircle className="w-4 h-4" />
-            <span>Rules</span>
-          </button>
-        </div>
-
       </div>
     </header>
   );

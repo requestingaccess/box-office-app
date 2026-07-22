@@ -3,7 +3,7 @@
 import React from 'react';
 import { User, Prediction, Movie } from '@/lib/types';
 import { formatCurrency } from '@/lib/scoring';
-import { Award, TrendingUp, Film, Ticket } from 'lucide-react';
+import { Award, Ticket, TrendingUp, Film } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 
 interface PlayerProfileProps {
@@ -31,137 +31,137 @@ export const PlayerProfile: React.FC<PlayerProfileProps> = ({ user, predictions,
   });
 
   return (
-    <div className="space-y-6 font-ledger">
+    <div className="space-y-6">
       
-      {/* Player Header Card */}
-      <div className="bg-slate-900 p-6 sm:p-8 rounded-xl border-2 border-amber-500/50 flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl">
+      {/* User Header Profile Card */}
+      <div className="paper-panel p-6 sm:p-8 rounded-3xl border-2 border-stone-400 flex flex-col md:flex-row items-center justify-between gap-6 bg-[#fcf9f2]">
         <div className="flex items-center space-x-5">
           <img
             src={user.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb'}
             alt={user.username}
-            className="w-20 h-20 rounded-full object-cover border-2 border-amber-400 shadow-lg shrink-0"
+            className="w-20 h-20 rounded-full object-cover ring-4 ring-amber-600 shadow-md"
           />
           <div>
-            <div className="inline-flex items-center space-x-1 px-3 py-1 rounded bg-amber-500/20 text-amber-300 text-xs font-bold border border-amber-500/40 mb-1 uppercase">
-              <Award className="w-3.5 h-3.5" />
-              <span>Official Ticket Analyst</span>
+            <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-black border border-amber-400 mb-1">
+              <Award className="w-3.5 h-3.5 text-amber-700" />
+              <span>OFFICIAL BOX OFFICE ANALYST</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-black text-white">{user.username}</h2>
-            <div className="text-xs text-slate-400">Box Office Member &bull; April 2026</div>
+            <h2 className="text-2xl sm:text-3xl font-black text-stone-900 font-serif">{user.username}</h2>
+            <div className="text-xs text-stone-600 font-mono">Member Since April 2026</div>
           </div>
         </div>
 
         {/* Quick Stat Badges */}
         <div className="grid grid-cols-3 gap-3 w-full md:w-auto">
-          <div className="p-3 rounded bg-slate-950 border border-slate-800 text-center">
-            <span className="text-[10px] text-slate-400 uppercase font-bold block">Avg Score / Stub</span>
-            <span className="text-lg font-black text-amber-400 font-mono">
+          <div className="p-3 rounded-2xl bg-[#f4efdf] border border-stone-300 text-center">
+            <span className="text-[10px] text-stone-500 uppercase tracking-wider font-black block">Avg Score</span>
+            <span className="text-lg font-black text-amber-800 font-mono">
               {avgScore > 0 ? `+${avgScore.toFixed(1)}` : avgScore.toFixed(1)}
             </span>
           </div>
 
-          <div className="p-3 rounded bg-slate-950 border border-slate-800 text-center">
-            <span className="text-[10px] text-slate-400 uppercase font-bold block">Issued Stubs</span>
-            <span className="text-lg font-black text-emerald-400 font-mono">{predictions.length}</span>
+          <div className="p-3 rounded-2xl bg-[#f4efdf] border border-stone-300 text-center">
+            <span className="text-[10px] text-stone-500 uppercase tracking-wider font-black block">Stubs Punched</span>
+            <span className="text-lg font-black text-emerald-800 font-mono">{predictions.length}</span>
           </div>
 
-          <div className="p-3 rounded bg-slate-950 border border-slate-800 text-center">
-            <span className="text-[10px] text-slate-400 uppercase font-bold block">Best Accuracy</span>
-            <span className="text-lg font-black text-indigo-400 font-mono">
+          <div className="p-3 rounded-2xl bg-[#f4efdf] border border-stone-300 text-center">
+            <span className="text-[10px] text-stone-500 uppercase tracking-wider font-black block">Best Accuracy</span>
+            <span className="text-lg font-black text-stone-900 font-mono">
               {bestError !== null ? `${bestError}% err` : 'N/A'}
             </span>
           </div>
         </div>
       </div>
 
-      {/* Performance Chart */}
+      {/* Score Performance Chart */}
       {chartData.length > 0 && (
-        <div className="bg-slate-950 p-6 rounded-xl border-2 border-slate-800 shadow-xl space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-            <div className="flex items-center space-x-2 text-sm font-bold text-slate-200">
-              <TrendingUp className="w-4 h-4 text-amber-400" />
-              <span>Points Yield Progression Timeline</span>
+        <div className="paper-panel p-6 rounded-2xl border-2 border-stone-400 shadow-md bg-[#fcf9f2] space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2 text-sm font-black text-stone-900">
+              <TrendingUp className="w-4 h-4 text-amber-700" />
+              <span>Score Yield Progression</span>
             </div>
-            <span className="text-xs text-slate-400">Score yield per stub</span>
+            <span className="text-xs text-stone-600 font-mono">Points per ticket</span>
           </div>
 
-          <div className="h-60 w-full">
+          <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                 <defs>
-                  <linearGradient id="scoreColor" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#f59e0b" stopOpacity={0} />
+                  <linearGradient id="paperScoreColor" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#d97706" stopOpacity={0.4} />
+                    <stop offset="95%" stopColor="#d97706" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                <XAxis dataKey="movieTitle" stroke="#64748b" tick={{ fontSize: 11 }} />
-                <YAxis stroke="#64748b" tick={{ fontSize: 11 }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2d8c3" />
+                <XAxis dataKey="movieTitle" stroke="#78716c" tick={{ fontSize: 11 }} />
+                <YAxis stroke="#78716c" tick={{ fontSize: 11 }} />
                 <Tooltip
-                  contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '8px', fontFamily: 'monospace' }}
-                  labelStyle={{ color: '#f8fafc', fontWeight: 'bold' }}
+                  contentStyle={{ backgroundColor: '#fcf9f2', borderColor: '#c8bba2', borderRadius: '12px', color: '#1c1917' }}
+                  labelStyle={{ color: '#1c1917', fontWeight: 'bold' }}
                 />
-                <Area type="monotone" dataKey="score" stroke="#f59e0b" strokeWidth={3} fillOpacity={1} fill="url(#scoreColor)" />
+                <Area type="monotone" dataKey="score" stroke="#d97706" strokeWidth={3} fillOpacity={1} fill="url(#paperScoreColor)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
       )}
 
-      {/* Ticket Stub Ledger Table */}
-      <div className="bg-slate-950 rounded-xl border-2 border-slate-800 overflow-hidden shadow-xl">
-        <div className="p-4 bg-slate-900 border-b border-slate-800 flex items-center justify-between">
-          <h3 className="text-xs font-black uppercase text-amber-400 flex items-center space-x-2">
-            <Ticket className="w-4 h-4" />
-            <span>Ticket Stub Prediction Log ({predictions.length})</span>
+      {/* Predictions History Table */}
+      <div className="paper-panel rounded-2xl border-2 border-stone-400 overflow-hidden shadow-md bg-[#fcf9f2]">
+        <div className="p-4 bg-[#e8dec7] border-b-2 border-stone-400 flex items-center justify-between">
+          <h3 className="text-sm font-black text-stone-900 flex items-center space-x-2">
+            <Ticket className="w-4 h-4 text-amber-800" />
+            <span>Punched Ticket Stubs History ({predictions.length})</span>
           </h3>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="bg-slate-900/60 border-b border-slate-800 uppercase tracking-wider text-slate-400 font-black">
-                <th className="py-3 px-4">Film Title</th>
-                <th className="py-3 px-4 text-right">Issued Guess</th>
-                <th className="py-3 px-4 text-right">Actual Opening</th>
-                <th className="py-3 px-4 text-center">Variance %</th>
-                <th className="py-3 px-4 text-center">Early Stamp</th>
-                <th className="py-3 px-4 text-right">Points Yield</th>
+              <tr className="bg-[#f4efdf] border-b border-stone-300 uppercase tracking-wider text-stone-700 font-black">
+                <th className="py-3 px-5">Movie Title</th>
+                <th className="py-3 px-5 text-right">Your Guess</th>
+                <th className="py-3 px-5 text-right">Actual Opening</th>
+                <th className="py-3 px-5 text-center">Variance %</th>
+                <th className="py-3 px-5 text-center">Early Bird</th>
+                <th className="py-3 px-5 text-right">Score Yield</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60">
+            <tbody className="divide-y divide-stone-300">
               {predictions.map((p) => {
                 const movie = movies.find((m) => m.id === p.movieId);
                 return (
-                  <tr key={p.id} className="hover:bg-slate-900/60 transition-colors">
-                    <td className="py-3 px-4 font-bold text-white">
+                  <tr key={p.id} className="hover:bg-[#f4efdf] transition-colors">
+                    <td className="py-3 px-5 font-bold text-stone-900 font-serif">
                       {movie ? movie.title : 'Movie'}
                     </td>
-                    <td className="py-3 px-4 text-right font-mono text-amber-400 font-bold">
+                    <td className="py-3 px-5 text-right font-mono text-amber-800 font-bold">
                       {formatCurrency(p.predictedRevenue)}
                     </td>
-                    <td className="py-3 px-4 text-right font-mono text-emerald-400 font-bold">
+                    <td className="py-3 px-5 text-right font-mono text-emerald-800 font-bold">
                       {movie?.actualRevenue ? formatCurrency(movie.actualRevenue) : 'Pending'}
                     </td>
-                    <td className="py-3 px-4 text-center font-mono text-slate-300">
+                    <td className="py-3 px-5 text-center font-mono text-stone-700">
                       {p.errorPercentage !== null ? `${p.errorPercentage}%` : '-'}
                     </td>
-                    <td className="py-3 px-4 text-center">
+                    <td className="py-3 px-5 text-center">
                       {p.earlyBirdMultiplier > 1.0 ? (
-                        <span className="rubber-stamp stamp-blue text-[9px]">
-                          {p.earlyBirdMultiplier}x BOOST
+                        <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-400 text-[10px] font-black">
+                          {p.earlyBirdMultiplier}x
                         </span>
                       ) : (
-                        <span className="text-slate-500">1.0x</span>
+                        <span className="text-stone-500">1.0x</span>
                       )}
                     </td>
-                    <td className="py-3 px-4 text-right font-mono font-black text-sm">
+                    <td className="py-3 px-5 text-right font-mono font-black text-sm">
                       {p.scoreAwarded !== null ? (
-                        <span className={p.scoreAwarded > 0 ? 'text-emerald-400' : 'text-rose-400'}>
+                        <span className={p.scoreAwarded > 0 ? 'text-emerald-800' : 'text-red-700'}>
                           {p.scoreAwarded > 0 ? `+${p.scoreAwarded}` : p.scoreAwarded} pts
                         </span>
                       ) : (
-                        <span className="text-slate-500">Pending</span>
+                        <span className="text-stone-500">Pending</span>
                       )}
                     </td>
                   </tr>

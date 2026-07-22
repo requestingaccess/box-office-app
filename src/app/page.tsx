@@ -9,7 +9,7 @@ import { PredictionModal } from '@/components/PredictionModal';
 import { Leaderboard } from '@/components/Leaderboard';
 import { PlayerProfile } from '@/components/PlayerProfile';
 import { RulesSection } from '@/components/RulesSection';
-import { CheckCircle2, AlertCircle } from 'lucide-react';
+import { CheckCircle2, Ticket } from 'lucide-react';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'feed' | 'leaderboard' | 'profile' | 'rules'>('feed');
@@ -69,7 +69,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-[#090d16] text-slate-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#f4efdf] text-stone-900 flex flex-col font-sans">
       
       {/* Navigation Header */}
       <Navbar
@@ -88,12 +88,12 @@ export default function Home() {
         {/* Toast Alert Banner */}
         {toastMessage && (
           <div className="fixed bottom-6 right-6 z-50 animate-bounce">
-            <div className={`px-4 py-3 rounded-2xl glass-panel shadow-2xl border flex items-center space-x-3 text-xs font-bold ${
+            <div className={`px-4 py-3 rounded-2xl paper-panel shadow-2xl border-2 flex items-center space-x-3 text-xs font-black ${
               toastMessage.type === 'success'
-                ? 'border-emerald-500/50 bg-slate-900/95 text-emerald-300'
-                : 'border-amber-500/50 bg-slate-900/95 text-amber-300'
+                ? 'border-emerald-700 bg-emerald-50 text-emerald-950'
+                : 'border-amber-700 bg-amber-50 text-amber-950'
             }`}>
-              <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+              <CheckCircle2 className="w-5 h-5 text-emerald-700 shrink-0" />
               <span>{toastMessage.text}</span>
             </div>
           </div>
@@ -141,8 +141,11 @@ export default function Home() {
       )}
 
       {/* Footer */}
-      <footer className="border-t border-slate-800/80 py-6 text-center text-xs text-slate-500">
-        Box Office Prediction Game &bull; Built with Next.js & TypeScript &bull; EST Timezone Enforced
+      <footer className="border-t-2 border-[#c8bba2] py-6 text-center text-xs font-bold text-stone-600 bg-[#e8dec7]">
+        <div className="flex items-center justify-center space-x-2">
+          <Ticket className="w-4 h-4 text-amber-800" />
+          <span>BOX OFFICE PREDICTION GAME &bull; RETRO MOVIE TICKET KIOSK &bull; EST TIMEZONE ENFORCED</span>
+        </div>
       </footer>
 
     </div>

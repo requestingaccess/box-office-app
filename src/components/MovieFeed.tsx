@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Movie, Prediction } from '@/lib/types';
 import { formatCurrency } from '@/lib/scoring';
-import { Clock, Lock, CheckCircle2, TrendingUp, Search, Ticket, Sparkles } from 'lucide-react';
+import { Clock, Lock, CheckCircle2, TrendingUp, Ticket, Search, Award } from 'lucide-react';
 
 interface MovieFeedProps {
   movies: Movie[];
@@ -16,12 +16,12 @@ export const MovieFeed: React.FC<MovieFeedProps> = ({ movies, userPredictions, o
   const [searchQuery, setSearchQuery] = useState('');
   const [timeRemaining, setTimeRemaining] = useState<string>('');
 
-  // Thursday 3 PM EST Countdown
+  // Countdown timer for Thursday 3 PM EST lock
   useEffect(() => {
     const updateCountdown = () => {
       const targetThursday = new Date();
       targetThursday.setDate(targetThursday.getDate() + ((4 + 7 - targetThursday.getDay()) % 7));
-      targetThursday.setHours(15, 0, 0, 0);
+      targetThursday.setHours(15, 0, 0, 0); // 3:00 PM EST
 
       const diff = targetThursday.getTime() - new Date().getTime();
       if (diff <= 0) {
@@ -54,210 +54,240 @@ export const MovieFeed: React.FC<MovieFeedProps> = ({ movies, userPredictions, o
   return (
     <div className="space-y-6">
       
-      {/* Box Office Ticket Window Marquee Header */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-amber-950 via-slate-900 to-amber-950 p-6 sm:p-8 border-2 border-amber-500/50 shadow-2xl">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      {/* Box Office Hero Header Banner */}
+      <div className="relative overflow-hidden rounded-2xl paper-panel p-6 sm:p-8 border-2 border-stone-400 shadow-md bg-[#fcf9f2]">
+        <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div>
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-md bg-amber-500/20 border border-amber-500/50 text-amber-300 text-xs font-bold font-ledger mb-3 uppercase tracking-widest">
-              <Ticket className="w-4 h-4 text-amber-400" />
-              <span>Official Box Office Ticket Window</span>
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-red-100 border border-red-300 text-red-800 text-xs font-black uppercase tracking-wider mb-2">
+              <Ticket className="w-3.5 h-3.5" />
+              <span>DOMESTIC OPENING WEEKEND ADMISSION KIOSK</span>
             </div>
-            <h1 className="text-3xl sm:text-4xl font-black text-amber-400 uppercase tracking-wider font-ledger">
-              BOX OFFICE <span className="text-white">PREDICTIONS</span>
+            <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-stone-900 font-serif">
+              Box Office <span className="text-amber-700 underline decoration-amber-500/50">Ticket Stub Predictions</span>
             </h1>
-            <p className="mt-2 text-xs sm:text-sm text-amber-100/80 max-w-2xl font-ledger">
-              Select an upcoming wide-release movie below to issue your domestic opening weekend revenue ticket stub before <span className="text-amber-300 font-bold underline">Thursday 3:00 PM EST</span>.
+            <p className="mt-2 text-sm text-stone-700 max-w-2xl leading-relaxed">
+              Punch your revenue guesses into the official kiosk stubs before <strong className="text-stone-950">Thursday 3:00 PM EST</strong>. Submissions &ge;14 days early earn a <span className="text-emerald-700 font-extrabold">1.25x point multiplier stamp</span>!
             </p>
           </div>
 
-          {/* Thursday Lock Timer Display */}
-          <div className="w-full md:w-auto bg-slate-950 p-4 rounded-xl border-2 border-amber-500/60 text-center min-w-[220px] shadow-inner">
-            <div className="text-[10px] font-bold text-amber-400 uppercase tracking-widest font-ledger mb-1 flex items-center justify-center space-x-1">
-              <Clock className="w-3.5 h-3.5 text-amber-400 animate-spin" style={{ animationDuration: '8s' }} />
+          {/* Thursday Lock Timer Box Office Sign */}
+          <div className="w-full md:w-auto p-4 rounded-xl border-2 border-stone-800 bg-[#1c1917] text-stone-100 flex flex-col items-center justify-center min-w-[220px] shadow-lg">
+            <div className="flex items-center space-x-1.5 text-[10px] font-black uppercase tracking-widest text-amber-400 mb-1">
+              <Clock className="w-3.5 h-3.5 animate-spin" style={{ animationDuration: '6s' }} />
               <span>THURSDAY LOCK TIMER</span>
             </div>
-            <div className="text-2xl font-black text-white font-ledger tracking-widest">
-              {timeRemaining || '3d 14h 22m'}
+            <div className="text-2xl font-black text-amber-400 tracking-wider font-mono">
+              {timeRemaining || 'Loading...'}
             </div>
-            <div className="text-[10px] text-slate-400 font-ledger mt-1">LOCKS EXACTLY @ 3:00 PM EST</div>
+            <div className="text-[10px] text-stone-400 mt-1 uppercase font-semibold">Locks Thu @ 3:00 PM EST</div>
           </div>
         </div>
       </div>
 
-      {/* Filter Chips & Search Bar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-slate-900/80 p-3 rounded-xl border border-slate-800">
-        <div className="flex items-center space-x-2 overflow-x-auto pb-1 sm:pb-0">
+      {/* Filter & Search Bar */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+        
+        {/* Ticket Filter Tabs */}
+        <div className="flex items-center space-x-2 overflow-x-auto pb-2 sm:pb-0">
           <button
             onClick={() => setFilter('all')}
-            className={`px-3 py-1.5 rounded-md text-xs font-ledger font-bold uppercase transition-all ${
+            className={`px-4 py-2 rounded-xl text-xs font-black transition-all whitespace-nowrap border-2 ${
               filter === 'all'
-                ? 'bg-amber-500 text-slate-950 border border-amber-400 shadow-md'
-                : 'bg-slate-950 text-slate-300 border border-slate-800 hover:bg-slate-800'
+                ? 'bg-amber-700 text-amber-50 border-amber-900 shadow-sm'
+                : 'bg-[#fcf9f2] text-stone-700 border-stone-300 hover:bg-[#e8dec7]'
             }`}
           >
-            All Films ({movies.length})
+            All Releases ({movies.length})
           </button>
           <button
             onClick={() => setFilter('open')}
-            className={`px-3 py-1.5 rounded-md text-xs font-ledger font-bold uppercase transition-all ${
+            className={`px-4 py-2 rounded-xl text-xs font-black transition-all whitespace-nowrap border-2 ${
               filter === 'open'
-                ? 'bg-emerald-500 text-slate-950 border border-emerald-400 shadow-md'
-                : 'bg-slate-950 text-slate-300 border border-slate-800 hover:bg-slate-800'
+                ? 'bg-emerald-700 text-emerald-50 border-emerald-900 shadow-sm'
+                : 'bg-[#fcf9f2] text-stone-700 border-stone-300 hover:bg-[#e8dec7]'
             }`}
           >
-            Open Ticket Window ({movies.filter((m) => m.status === 'open').length})
+            Open Predictions ({movies.filter((m) => m.status === 'open').length})
           </button>
           <button
             onClick={() => setFilter('locked')}
-            className={`px-3 py-1.5 rounded-md text-xs font-ledger font-bold uppercase transition-all ${
+            className={`px-4 py-2 rounded-xl text-xs font-black transition-all whitespace-nowrap border-2 ${
               filter === 'locked'
-                ? 'bg-amber-600 text-white border border-amber-500 shadow-md'
-                : 'bg-slate-950 text-slate-300 border border-slate-800 hover:bg-slate-800'
+                ? 'bg-stone-800 text-stone-50 border-stone-950 shadow-sm'
+                : 'bg-[#fcf9f2] text-stone-700 border-stone-300 hover:bg-[#e8dec7]'
             }`}
           >
-            In Weekend / Locked ({movies.filter((m) => m.status === 'locked' || m.status === 'estimated').length})
+            Locked Weekend ({movies.filter((m) => m.status === 'locked' || m.status === 'estimated').length})
           </button>
           <button
             onClick={() => setFilter('scored')}
-            className={`px-3 py-1.5 rounded-md text-xs font-ledger font-bold uppercase transition-all ${
+            className={`px-4 py-2 rounded-xl text-xs font-black transition-all whitespace-nowrap border-2 ${
               filter === 'scored'
-                ? 'bg-blue-600 text-white border border-blue-500 shadow-md'
-                : 'bg-slate-950 text-slate-300 border border-slate-800 hover:bg-slate-800'
+                ? 'bg-red-700 text-red-50 border-red-900 shadow-sm'
+                : 'bg-[#fcf9f2] text-stone-700 border-stone-300 hover:bg-[#e8dec7]'
             }`}
           >
-            Scored Tickets ({movies.filter((m) => m.status === 'scored').length})
+            Scored Movies ({movies.filter((m) => m.status === 'scored').length})
           </button>
         </div>
 
-        {/* Search */}
-        <div className="relative min-w-[220px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+        {/* Search Bar */}
+        <div className="relative min-w-[240px]">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-500" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search movie title..."
-            className="w-full pl-9 pr-3 py-1.5 text-xs font-ledger rounded-lg bg-slate-950 border border-slate-800 text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-500"
+            placeholder="Search title or genre..."
+            className="w-full pl-9 pr-4 py-2 text-xs rounded-xl bg-[#fcf9f2] border-2 border-stone-300 text-stone-900 placeholder-stone-500 focus:outline-none focus:border-amber-700 transition-all font-semibold"
           />
         </div>
       </div>
 
-      {/* Perforated Ticket Stub Cards Feed */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {filteredMovies.map((movie) => {
+      {/* Perforated Ticket Stub Cards Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredMovies.map((movie, idx) => {
           const userPred = userPredictions.find((p) => p.movieId === movie.id);
+          const serialNum = `STUB-2026-${(1000 + idx * 47).toString()}`;
 
           return (
-            <div
-              key={movie.id}
-              className="ticket-stub rounded-xl overflow-hidden flex flex-col sm:flex-row border-2 border-amber-500/40 shadow-2xl relative transition-transform hover:-translate-y-1 duration-200"
-            >
-              {/* Left Stub Section (Movie Info & Artwork) */}
-              <div className="flex-1 p-4 flex flex-col justify-between space-y-3 bg-[#fef08a] text-slate-950">
-                <div className="flex items-start space-x-3">
+            <div key={movie.id} className="ticket-stub rounded-2xl p-5 flex flex-col justify-between group overflow-hidden">
+              
+              {/* Left & Right Perforated Side Cutout Notches */}
+              <div className="ticket-notch-left" />
+              <div className="ticket-notch-right" />
+
+              {/* Ticket Top Serial Header */}
+              <div className="flex items-center justify-between border-b border-stone-300 pb-3 mb-3 text-[10px] font-mono font-bold text-stone-500">
+                <span className="flex items-center space-x-1">
+                  <Ticket className="w-3 h-3 text-amber-700" />
+                  <span>{serialNum}</span>
+                </span>
+                <span>ADMIT ONE &bull; 3-DAY DOMESTIC</span>
+              </div>
+
+              {/* Movie Backdrop & Title */}
+              <div className="space-y-3">
+                <div className="relative h-44 w-full rounded-xl overflow-hidden border border-stone-300 bg-stone-900">
                   <img
-                    src={movie.posterPath}
+                    src={movie.backdropPath || movie.posterPath}
                     alt={movie.title}
-                    className="w-16 h-24 rounded-md object-cover shadow-md border border-amber-600/30 shrink-0"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80"
                   />
-                  <div>
-                    <div className="text-[10px] font-ledger font-extrabold uppercase text-amber-900 tracking-wider">
-                      ADM-ONE &bull; {movie.genre.slice(0, 2).join(' / ')}
-                    </div>
-                    <h3 className="text-lg font-black font-ledger text-slate-950 leading-tight">
-                      {movie.title}
-                    </h3>
-                    <div className="text-xs font-ledger text-slate-800 mt-1 font-semibold">
-                      Release: {movie.releaseDate}
-                    </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-transparent to-transparent" />
+
+                  {/* Ink Stamp Badge overlay */}
+                  <div className="absolute top-3 left-3 z-10">
+                    {movie.status === 'open' && (
+                      <span className="ink-stamp ink-stamp-green text-[10px]">
+                        [ OPEN FOR GUESSES ]
+                      </span>
+                    )}
+                    {movie.status === 'locked' && (
+                      <span className="ink-stamp ink-stamp-gold text-[10px]">
+                        [ LOCKED WEEKEND ]
+                      </span>
+                    )}
+                    {movie.status === 'estimated' && (
+                      <span className="ink-stamp ink-stamp-gold text-[10px]">
+                        [ PROVISIONAL EST ]
+                      </span>
+                    )}
+                    {movie.status === 'scored' && (
+                      <span className="ink-stamp ink-stamp-red text-[10px]">
+                        [ SCORED & FINAL ]
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="absolute bottom-2 right-3 text-[10px] font-mono font-bold text-stone-200 bg-stone-900/80 px-2 py-0.5 rounded">
+                    Release: {movie.releaseDate}
                   </div>
                 </div>
 
-                {/* Box Office Numbers Bar */}
-                <div className="bg-amber-200/80 p-2.5 rounded-lg border border-amber-400/80 grid grid-cols-2 gap-2 text-xs font-ledger">
-                  <div>
-                    <span className="text-[9px] uppercase font-bold text-amber-900 block">Actual / Estimate</span>
-                    <span className="font-extrabold text-slate-950 text-sm">
-                      {movie.actualRevenue ? formatCurrency(movie.actualRevenue) : movie.estimateRevenue ? formatCurrency(movie.estimateRevenue) + ' (Est)' : 'Awaiting Weekend'}
-                    </span>
-                  </div>
-
-                  <div>
-                    <span className="text-[9px] uppercase font-bold text-amber-900 block">Your Prediction</span>
-                    <span className="font-extrabold text-amber-950 text-sm">
-                      {userPred ? formatCurrency(userPred.predictedRevenue) : 'No Ticket'}
-                    </span>
-                  </div>
+                <div>
+                  <h3 className="text-xl font-black text-stone-900 font-serif group-hover:text-amber-800 transition-colors">
+                    {movie.title}
+                  </h3>
+                  <p className="mt-1 text-xs text-stone-600 line-clamp-2 leading-relaxed font-sans">
+                    {movie.overview}
+                  </p>
                 </div>
               </div>
 
-              {/* Perforated Divider */}
-              <div className="ticket-perforation hidden sm:block" />
+              {/* Ticket Stub Perforation Divider */}
+              <div className="ticket-perforation" />
 
-              {/* Right Stub Section (Status Rubber Stamp & Action) */}
-              <div className="w-full sm:w-44 p-4 bg-[#fde047] flex flex-col justify-between items-center text-center space-y-3 border-t-2 sm:border-t-0 sm:border-l-2 border-dashed border-amber-900/30">
-                <div className="text-[9px] font-ledger font-black uppercase tracking-widest text-amber-950">
-                  TICKET STUB #{movie.tmdbId.toString().slice(-4)}
+              {/* Revenue & Guess Box Office Ticket Section */}
+              <div className="space-y-3">
+                <div className="grid grid-cols-2 gap-2 bg-[#f4efdf] p-3 rounded-xl border border-stone-300">
+                  <div>
+                    <span className="text-[9px] uppercase font-black text-stone-500 block tracking-wider">Actual / Est.</span>
+                    <span className="text-sm font-black text-emerald-800 font-mono">
+                      {movie.actualRevenue ? formatCurrency(movie.actualRevenue) : movie.estimateRevenue ? formatCurrency(movie.estimateRevenue) + ' (Est)' : 'Awaiting'}
+                    </span>
+                  </div>
+
+                  <div>
+                    <span className="text-[9px] uppercase font-black text-stone-500 block tracking-wider">Your Prediction</span>
+                    <span className="text-sm font-black text-amber-800 font-mono">
+                      {userPred ? formatCurrency(userPred.predictedRevenue) : 'No Prediction'}
+                    </span>
+                  </div>
                 </div>
 
-                {/* Rubber Stamp Status */}
-                <div>
-                  {movie.status === 'open' && (
-                    <span className="rubber-stamp stamp-green text-xs">
-                      OPEN TICKET
-                    </span>
-                  )}
-                  {movie.status === 'locked' && (
-                    <span className="rubber-stamp stamp-amber text-xs">
-                      LOCKED
-                    </span>
-                  )}
-                  {movie.status === 'estimated' && (
-                    <span className="rubber-stamp stamp-blue text-xs">
-                      ESTIMATED
-                    </span>
-                  )}
-                  {movie.status === 'scored' && (
-                    <span className="rubber-stamp stamp-green text-xs">
-                      SCORED
-                    </span>
-                  )}
-                </div>
-
-                {/* Score Yield if Scored */}
+                {/* Score Yield Badge if Scored */}
                 {userPred && userPred.scoreAwarded !== null && (
-                  <div className="text-center font-ledger">
-                    <div className="text-[9px] font-bold uppercase text-amber-900">Score Yield</div>
-                    <div className={`text-base font-black ${userPred.scoreAwarded > 0 ? 'text-emerald-800' : 'text-rose-800'}`}>
-                      {userPred.scoreAwarded > 0 ? `+${userPred.scoreAwarded}` : userPred.scoreAwarded} pts
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-amber-100 border border-amber-400">
+                    <div className="flex items-center space-x-1.5">
+                      <Award className="w-3.5 h-3.5 text-amber-700" />
+                      <span className="text-[11px] font-bold text-amber-950">Points Yield:</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-[10px] font-bold text-stone-600">({userPred.errorPercentage}% err)</span>
+                      <span className={`text-xs font-black font-mono ${userPred.scoreAwarded > 0 ? 'text-emerald-700' : 'text-red-700'}`}>
+                        {userPred.scoreAwarded > 0 ? `+${userPred.scoreAwarded}` : userPred.scoreAwarded} pts
+                      </span>
                     </div>
                   </div>
                 )}
-
-                {/* Fake Barcode graphic */}
-                <div className="w-full bg-slate-950 text-amber-400 py-1 font-mono text-[8px] tracking-widest uppercase rounded">
-                  ||| | |||| | ||| ||
-                </div>
 
                 {/* Action Button */}
                 {movie.status === 'open' && (
                   <button
                     onClick={() => onOpenPredictionModal(movie)}
-                    className="w-full py-2 px-3 rounded bg-amber-950 text-amber-300 font-ledger font-black text-xs uppercase hover:bg-slate-950 transition-all border border-amber-700 shadow"
+                    className="w-full py-2.5 px-4 rounded-xl bg-amber-600 hover:bg-amber-700 border-2 border-amber-900 text-amber-50 font-black text-xs uppercase tracking-wider shadow-sm transition-all flex items-center justify-center space-x-2"
                   >
-                    {userPred ? 'Edit Stub' : 'Issue Stub'}
+                    <Ticket className="w-4 h-4" />
+                    <span>{userPred ? 'RE-PUNCH TICKET' : 'PUNCH TICKET GUESS'}</span>
                   </button>
                 )}
 
                 {movie.status !== 'open' && (
                   <button
                     disabled
-                    className="w-full py-2 px-3 rounded bg-slate-400/40 text-slate-800 font-ledger font-bold text-xs uppercase cursor-not-allowed border border-slate-400"
+                    className="w-full py-2.5 px-4 rounded-xl bg-stone-300 text-stone-500 font-black text-xs uppercase cursor-not-allowed border border-stone-400 flex items-center justify-center space-x-2"
                   >
-                    Stub Locked
+                    <Lock className="w-3.5 h-3.5" />
+                    <span>TICKET LOCKED</span>
                   </button>
                 )}
+
+                {/* Barcode Graphic Footer */}
+                <div className="flex items-center justify-center space-x-1 pt-1 opacity-40">
+                  <div className="h-4 w-1 bg-stone-900" />
+                  <div className="h-4 w-2 bg-stone-900" />
+                  <div className="h-4 w-0.5 bg-stone-900" />
+                  <div className="h-4 w-1.5 bg-stone-900" />
+                  <div className="h-4 w-3 bg-stone-900" />
+                  <div className="h-4 w-1 bg-stone-900" />
+                  <div className="h-4 w-2 bg-stone-900" />
+                  <div className="h-4 w-0.5 bg-stone-900" />
+                  <div className="h-4 w-1.5 bg-stone-900" />
+                </div>
+
               </div>
+
             </div>
           );
         })}
