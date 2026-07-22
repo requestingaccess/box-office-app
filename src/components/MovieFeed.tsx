@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Movie, Prediction } from '@/lib/types';
 import { calculateScore, formatCurrency } from '@/lib/scoring';
-import { Clock, Lock, CheckCircle2, Ticket, Search, Award, ChevronDown, ChevronUp, Zap, Check } from 'lucide-react';
+import { Clock, Lock, CheckCircle2, Ticket, Search, Award, Zap, Check, X, Scissors } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 interface MovieFeedProps {
@@ -16,6 +16,11 @@ export const MovieFeed: React.FC<MovieFeedProps> = ({ movies, userPredictions, o
   const [filter, setFilter] = useState<'all' | 'open' | 'locked' | 'scored'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [timeRemaining, setTimeRemaining] = useState<string>('');
+  
+  // State 3: Selected Ticket for Center-Screen Inspection Stage
+  const [inspectingMovie, setInspectingMovie] = useState<Movie | null>(null);
+  const [numericAmount, setNumericAmount] = useState<number>(150000000);
+  const [isTearing, setIsTearing] = useState<boolean>(false);
 
   // Countdown timer for Thursday 3 PM EST lock
   useEffect(() => {
@@ -52,25 +57,56 @@ export const MovieFeed: React.FC<MovieFeedProps> = ({ movies, userPredictions, o
     return true;
   });
 
-  // Skew rotation classes for resting paper ticket effect
   const skewClasses = ['ticket-skew-left-1', 'ticket-skew-right-1', 'ticket-skew-left-2', 'ticket-skew-right-2'];
+
+  const handleOpenInspection = (movie: Movie) => {
+    const existing = userPredictions.find((p) => p.movieId === movie.id);
+    setNumericAmount(existing ? existing.predictedRevenue : 150000000);
+    setIsTearing(false);
+    setInspectingMovie(movie);
+  };
+
+  const handleExecuteTearAndSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!inspectingMovie || numericAmount <= 0) return;
+
+    // Trigger ticket tear animation sequence
+    setIsTearing(true);
+
+    try {
+      confetti({
+        particleCount: 85,
+        spread: 90,
+        origin: { y: 0.5 },
+        colors: ['#d97706', '#dc2626', '#15803d'],
+      });
+    } catch {
+      // Fallback
+    }
+
+    setTimeout(() => {
+      onSubmitPrediction(inspectingMovie.id, numericAmount);
+      setIsTearing(false);
+      setInspectingMovie(null);
+    }, 750);
+  };
 
   return (
     <div className="space-y-6">
       
-      {/* Box Office Hero Header Banner */}
+      {/* Hero Header */}
       <div className="relative overflow-hidden rounded-2xl paper-panel p-5 sm:p-6 border-0 shadow-md bg-[#fcf9f2]">
         <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div>
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-red-100 border border-red-300 text-red-800 text-xs font-black uppercase tracking-wider mb-2">
               <Ticket className="w-3.5 h-3.5" />
-              <span>BORDERLESS TICKET STUB FEED &bull; 2-COLUMN VIEW</span>
+              <span>3-STATE TICKET INSPECTION & ANIMATED STUB TEAR</span>
             </div>
             <h1 className="text-3xl font-black tracking-tight text-stone-900 font-serif">
               Box Office <span className="text-amber-800 underline decoration-amber-500/50">Ticket Stub Predictions</span>
             </h1>
             <p className="mt-1.5 text-xs text-stone-700 max-w-2xl leading-relaxed">
-              Hover tickets to lift them off the page. Click to expand inline prediction controls. Lock in your guesses before <strong className="text-stone-950">Thursday 3:00 PM EST</strong> to earn up to <span className="text-emerald-800 font-extrabold">1.25x Early Bird point multipliers</span>!
+              Click any ticket to <strong className="text-stone-950">pick it up into center-screen inspection stage</strong>. Punch your guess, watch the stub tear off and toss away, leaving your prediction <span className="text-amber-900 font-extrabold">etched into the paper table</span>!
             </p>
           </div>
 
@@ -90,8 +126,6 @@ export const MovieFeed: React.FC<MovieFeedProps> = ({ movies, userPredictions, o
 
       {/* Filter Tabs & Search Bar */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-        
-        {/* Ticket Filter Chips */}
         <div className="flex items-center space-x-2 overflow-x-auto pb-2 sm:pb-0">
           <button
             onClick={() => setFilter('all')}
@@ -135,7 +169,6 @@ export const MovieFeed: React.FC<MovieFeedProps> = ({ movies, userPredictions, o
           </button>
         </div>
 
-        {/* Search Bar */}
         <div className="relative min-w-[220px]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-stone-500" />
           <input
@@ -148,297 +181,320 @@ export const MovieFeed: React.FC<MovieFeedProps> = ({ movies, userPredictions, o
         </div>
       </div>
 
-      {/* Condensed 2-Column Horizontal Ticket Grid (grid-cols-1 lg:grid-cols-2) */}
+      {/* 2-Column Desktop Ticket Feed */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
         {filteredMovies.map((movie, idx) => {
           const userPred = userPredictions.find((p) => p.movieId === movie.id);
-          const serialNum = `STUB-2026-${(3000 + idx * 89).toString()}`;
+          const serialNum = `STUB-2026-${(4000 + idx * 91).toString()}`;
           const skewClass = skewClasses[idx % skewClasses.length];
 
           return (
-            <CondensedTicketStubCard
-              key={movie.id}
-              movie={movie}
-              userPrediction={userPred}
-              serialNum={serialNum}
-              skewClass={skewClass}
-              onSubmitPrediction={onSubmitPrediction}
-            />
+            <div key={movie.id} className="relative">
+              
+              {/* BACKGROUND ETCHED PREDICTION RECORD LAYER (Layered on table behind ticket) */}
+              <div className="absolute inset-0 p-4 rounded-2xl etched-paper-box flex items-center justify-between pointer-events-none z-0">
+                <div className="pl-4">
+                  <div className="text-[9px] uppercase font-black etched-paper-text tracking-widest">
+                    TABLE ETCHED PREDICTION RECORD
+                  </div>
+                  <div className="text-lg font-black font-mono etched-paper-text">
+                    {userPred ? formatCurrency(userPred.predictedRevenue) : 'STUB PENDING PUNCH'}
+                  </div>
+                </div>
+
+                <div className="pr-4 text-right">
+                  {userPred && (
+                    <div className="text-[10px] font-black etched-paper-text">
+                      EARLY BIRD: {userPred.earlyBirdMultiplier}X
+                    </div>
+                  )}
+                  <div className="text-[8px] font-mono etched-paper-text">
+                    {userPred ? `PUNCHED: ${new Date(userPred.submittedAt).toLocaleDateString()}` : 'UNPUNCHED'}
+                  </div>
+                </div>
+              </div>
+
+              {/* FOREGROUND PHYSICAL TICKET STUB (Hover Lifted & Organic Skewed) */}
+              <div
+                onClick={() => movie.status === 'open' && handleOpenInspection(movie)}
+                className={`borderless-ticket-stub rounded-2xl overflow-visible cursor-pointer ${skewClass} relative z-10`}
+              >
+                {/* 4 Corner Cutouts */}
+                <div className="ticket-corner-tl" />
+                <div className="ticket-corner-tr" />
+                <div className="ticket-corner-bl" />
+                <div className="ticket-corner-br" />
+
+                <div className="relative flex flex-col sm:flex-row items-stretch">
+                  
+                  {/* Left Section */}
+                  <div className="flex-1 p-4 sm:p-5 flex flex-col justify-between space-y-3">
+                    <div className="flex items-center justify-between border-b border-stone-300 pb-1.5 text-[9px] font-mono font-bold text-stone-500">
+                      <div className="flex items-center space-x-1.5">
+                        <Ticket className="w-3 h-3 text-amber-700" />
+                        <span>{serialNum}</span>
+                        <span>&bull; ADMIT ONE</span>
+                      </div>
+                      <div className="flex items-center space-x-0.5 opacity-60">
+                        <div className="h-2.5 w-1 bg-stone-900" />
+                        <div className="h-2.5 w-2 bg-stone-900" />
+                        <div className="h-2.5 w-0.5 bg-stone-900" />
+                        <div className="h-2.5 w-1.5 bg-stone-900" />
+                        <div className="h-2.5 w-2.5 bg-stone-900" />
+                      </div>
+                    </div>
+
+                    <div className="flex items-start space-x-3">
+                      <div className="relative w-20 h-28 shrink-0 rounded-lg overflow-hidden border border-stone-300 bg-stone-900 shadow-sm">
+                        <img src={movie.posterPath} alt={movie.title} className="w-full h-full object-cover" />
+                      </div>
+
+                      <div className="space-y-1 flex-1 min-w-0">
+                        <div className="flex items-center space-x-1.5">
+                          {movie.status === 'open' && <span className="ink-stamp ink-stamp-green text-[9px]">[ OPEN ]</span>}
+                          {movie.status === 'locked' && <span className="ink-stamp ink-stamp-gold text-[9px]">[ LOCKED ]</span>}
+                          {movie.status === 'estimated' && <span className="ink-stamp ink-stamp-gold text-[9px]">[ EST ]</span>}
+                          {movie.status === 'scored' && <span className="ink-stamp ink-stamp-red text-[9px]">[ SCORED ]</span>}
+                        </div>
+
+                        <h3 className="text-lg font-black text-stone-900 font-serif leading-tight truncate">
+                          {movie.title}
+                        </h3>
+                        
+                        <div className="text-[10px] text-stone-600 font-mono">
+                          Release: {movie.releaseDate}
+                        </div>
+
+                        <div className="flex items-center space-x-1 pt-0.5 flex-wrap">
+                          {movie.genre.slice(0, 2).map((g) => (
+                            <span key={g} className="px-1.5 py-0.2 rounded bg-[#f4efdf] text-[9px] font-bold text-stone-700 border border-stone-300">
+                              {g}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2 bg-[#f4efdf] p-2 rounded-lg text-[11px]">
+                      <div>
+                        <span className="text-[8px] uppercase font-black text-stone-500 block tracking-wider">Actual / Est</span>
+                        <span className="text-xs font-black text-emerald-800 font-mono">
+                          {movie.actualRevenue ? formatCurrency(movie.actualRevenue) : movie.estimateRevenue ? formatCurrency(movie.estimateRevenue) + ' (Est)' : 'Awaiting'}
+                        </span>
+                      </div>
+
+                      <div>
+                        <span className="text-[8px] uppercase font-black text-stone-500 block tracking-wider">Punched Guess</span>
+                        <span className="text-xs font-black text-amber-800 font-mono">
+                          {userPred ? formatCurrency(userPred.predictedRevenue) : 'Click to Punch'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Vertical Perforation Divider Line */}
+                  <div className="ticket-vertical-perforation relative hidden sm:block">
+                    <div className="ticket-notch-top -left-[12px]" />
+                    <div className="ticket-notch-bottom -left-[12px]" />
+                  </div>
+
+                  {/* Right Stub Section */}
+                  <div className="sm:w-52 p-4 bg-[#f4efdf] flex flex-col justify-between space-y-3 rounded-b-2xl sm:rounded-b-none sm:rounded-r-2xl">
+                    <div className="flex items-center justify-between border-b border-stone-300 pb-1">
+                      <span className="text-[9px] font-black uppercase tracking-wider text-amber-900">PREDICTION STUB</span>
+                      {userPred && userPred.scoreAwarded !== null && (
+                        <span className="text-xs font-black font-mono text-emerald-800">
+                          +{userPred.scoreAwarded} pts
+                        </span>
+                      )}
+                    </div>
+
+                    <div>
+                      <div className="text-[8px] uppercase font-black text-stone-500 tracking-wider">Current Guess</div>
+                      <div className="text-xl font-black text-amber-900 font-mono tracking-tight">
+                        {userPred ? formatCurrency(userPred.predictedRevenue) : '$0'}
+                      </div>
+                    </div>
+
+                    {movie.status === 'open' && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleOpenInspection(movie);
+                        }}
+                        className="w-full py-2 px-3 rounded-lg bg-amber-700 hover:bg-amber-800 text-amber-50 font-black text-[11px] uppercase tracking-wider transition-all flex items-center justify-center space-x-1 shadow-sm"
+                      >
+                        <Ticket className="w-3.5 h-3.5" />
+                        <span>{userPred ? 'INSPECT & EDIT' : 'INSPECT & PUNCH'}</span>
+                      </button>
+                    )}
+
+                    {movie.status !== 'open' && (
+                      <button
+                        disabled
+                        className="w-full py-2 px-3 rounded-lg bg-stone-300 text-stone-500 font-black text-[11px] uppercase cursor-not-allowed border border-stone-400 flex items-center justify-center space-x-1"
+                      >
+                        <Lock className="w-3 h-3" />
+                        <span>LOCKED</span>
+                      </button>
+                    )}
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
           );
         })}
       </div>
-    </div>
-  );
-};
 
-// Component for Individual Condensed Horizontal Ticket Stub Card
-interface CondensedTicketStubCardProps {
-  movie: Movie;
-  userPrediction?: Prediction;
-  serialNum: string;
-  skewClass: string;
-  onSubmitPrediction: (movieId: string, amount: number) => void;
-}
-
-const CondensedTicketStubCard: React.FC<CondensedTicketStubCardProps> = ({
-  movie,
-  userPrediction,
-  serialNum,
-  skewClass,
-  onSubmitPrediction,
-}) => {
-  const [isExpanded, setIsExpanded] = useState<boolean>(false);
-  const [numericAmount, setNumericAmount] = useState<number>(0);
-
-  useEffect(() => {
-    if (userPrediction) {
-      setNumericAmount(userPrediction.predictedRevenue);
-    } else {
-      setNumericAmount(150000000);
-    }
-  }, [userPrediction]);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const rawVal = e.target.value.replace(/[^0-9]/g, '');
-    setNumericAmount(rawVal ? parseInt(rawVal, 10) : 0);
-  };
-
-  const handleQuickAdd = (millions: number) => {
-    setNumericAmount((prev) => prev + millions * 1_000_000);
-  };
-
-  const handleConfirmSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (numericAmount <= 0) return;
-
-    try {
-      confetti({
-        particleCount: 60,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: ['#d97706', '#dc2626', '#15803d'],
-      });
-    } catch {
-      // Fallback
-    }
-
-    onSubmitPrediction(movie.id, numericAmount);
-    setIsExpanded(false);
-  };
-
-  const sampleTarget = numericAmount > 0 ? numericAmount : 100000000;
-  const sampleScoring = calculateScore(numericAmount, sampleTarget, new Date().toISOString(), movie.releaseDate);
-
-  return (
-    <div
-      className={`borderless-ticket-stub rounded-2xl overflow-visible ${
-        isExpanded ? 'z-30 shadow-2xl bg-white !transform-none' : skewClass
-      }`}
-    >
-      {/* Exaggerated 4 Corner Cutouts */}
-      <div className="ticket-corner-tl" />
-      <div className="ticket-corner-tr" />
-      <div className="ticket-corner-bl" />
-      <div className="ticket-corner-br" />
-
-      <div className="relative flex flex-col sm:flex-row items-stretch">
-        
-        {/* LEFT MAIN TICKET SECTION (65% width) */}
-        <div className="flex-1 p-4 sm:p-5 flex flex-col justify-between space-y-3">
+      {/* STATE 3: CENTER-SCREEN TICKET INSPECTION STAGE (INSPECTION OVERLAY) */}
+      {inspectingMovie && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-950/70 backdrop-blur-md animate-fadeIn">
           
-          {/* Header Serial */}
-          <div className="flex items-center justify-between border-b border-stone-300 pb-1.5 text-[9px] font-mono font-bold text-stone-500">
-            <div className="flex items-center space-x-1.5">
-              <Ticket className="w-3 h-3 text-amber-700" />
-              <span>{serialNum}</span>
-              <span>&bull; ADMIT ONE</span>
-            </div>
-            <div className="flex items-center space-x-0.5 opacity-60">
-              <div className="h-2.5 w-1 bg-stone-900" />
-              <div className="h-2.5 w-2 bg-stone-900" />
-              <div className="h-2.5 w-0.5 bg-stone-900" />
-              <div className="h-2.5 w-1.5 bg-stone-900" />
-              <div className="h-2.5 w-2.5 bg-stone-900" />
-            </div>
-          </div>
+          <div className="relative w-full max-w-2xl borderless-ticket-stub rounded-3xl p-6 sm:p-8 bg-[#fcf9f2] shadow-2xl !transform-none">
+            
+            {/* 4 Corner Cutouts */}
+            <div className="ticket-corner-tl" />
+            <div className="ticket-corner-tr" />
+            <div className="ticket-corner-bl" />
+            <div className="ticket-corner-br" />
 
-          {/* Main Poster + Info */}
-          <div className="flex items-start space-x-3">
-            <div className="relative w-20 h-28 shrink-0 rounded-lg overflow-hidden border border-stone-300 bg-stone-900 shadow-sm">
-              <img src={movie.posterPath} alt={movie.title} className="w-full h-full object-cover" />
+            {/* Close Button */}
+            <button
+              onClick={() => setInspectingMovie(null)}
+              className="absolute top-5 right-5 p-2 rounded-full bg-stone-200 text-stone-700 hover:text-stone-950 hover:bg-stone-300 transition-all border border-stone-400 z-30"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            {/* Stage Title */}
+            <div className="flex items-center space-x-2 text-xs font-black text-amber-900 uppercase tracking-widest mb-4">
+              <Scissors className="w-4 h-4 text-amber-700" />
+              <span>TICKET INSPECTION STAGE &bull; STUB PUNCHING & TEARING</span>
             </div>
 
-            <div className="space-y-1 flex-1 min-w-0">
-              <div className="flex items-center space-x-1.5">
-                {movie.status === 'open' && <span className="ink-stamp ink-stamp-green text-[9px]">[ OPEN ]</span>}
-                {movie.status === 'locked' && <span className="ink-stamp ink-stamp-gold text-[9px]">[ LOCKED ]</span>}
-                {movie.status === 'estimated' && <span className="ink-stamp ink-stamp-gold text-[9px]">[ EST ]</span>}
-                {movie.status === 'scored' && <span className="ink-stamp ink-stamp-red text-[9px]">[ SCORED ]</span>}
-              </div>
-
-              <h3 className="text-lg font-black text-stone-900 font-serif leading-tight truncate">
-                {movie.title}
-              </h3>
+            <div className="relative flex flex-col md:flex-row items-stretch overflow-hidden rounded-2xl border-2 border-stone-300 bg-[#fcf9f2]">
               
-              <div className="text-[10px] text-stone-600 font-mono">
-                Release: {movie.releaseDate}
-              </div>
-
-              {/* Genre tags */}
-              <div className="flex items-center space-x-1 pt-0.5 flex-wrap">
-                {movie.genre.slice(0, 2).map((g) => (
-                  <span key={g} className="px-1.5 py-0.2 rounded bg-[#f4efdf] text-[9px] font-bold text-stone-700 border border-stone-300">
-                    {g}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Actuals & Estimate Numbers Footer */}
-          <div className="grid grid-cols-2 gap-2 bg-[#f4efdf] p-2 rounded-lg text-[11px]">
-            <div>
-              <span className="text-[8px] uppercase font-black text-stone-500 block tracking-wider">Actual / Est</span>
-              <span className="text-xs font-black text-emerald-800 font-mono">
-                {movie.actualRevenue ? formatCurrency(movie.actualRevenue) : movie.estimateRevenue ? formatCurrency(movie.estimateRevenue) + ' (Est)' : 'Awaiting'}
-              </span>
-            </div>
-
-            <div>
-              <span className="text-[8px] uppercase font-black text-stone-500 block tracking-wider">Your Prediction</span>
-              <span className="text-xs font-black text-amber-800 font-mono">
-                {userPrediction ? formatCurrency(userPrediction.predictedRevenue) : 'No Prediction'}
-              </span>
-            </div>
-          </div>
-
-        </div>
-
-        {/* VERTICAL PERFORATION DIVIDER LINE with Top & Bottom Circular Cutouts */}
-        <div className="ticket-vertical-perforation relative hidden sm:block">
-          <div className="ticket-notch-top -left-[12px]" />
-          <div className="ticket-notch-bottom -left-[12px]" />
-        </div>
-
-        {/* RIGHT TEAR-OFF TICKET STUB (35% width) */}
-        <div
-          className={`sm:w-56 p-4 bg-[#f4efdf] flex flex-col justify-between space-y-3 border-t sm:border-t-0 border-stone-300 rounded-b-2xl sm:rounded-b-none sm:rounded-r-2xl transition-all duration-300 ${
-            isExpanded ? 'bg-amber-50' : ''
-          }`}
-        >
-          <div className="flex items-center justify-between border-b border-stone-300 pb-1">
-            <span className="text-[9px] font-black uppercase tracking-wider text-amber-900">PREDICTION STUB</span>
-            {userPrediction && userPrediction.scoreAwarded !== null && (
-              <span className="text-xs font-black font-mono text-emerald-800">
-                +{userPrediction.scoreAwarded} pts
-              </span>
-            )}
-          </div>
-
-          <div>
-            <div className="text-[8px] uppercase font-black text-stone-500 tracking-wider">Punched Guess</div>
-            <div className="text-xl font-black text-amber-900 font-mono tracking-tight">
-              {userPrediction ? formatCurrency(userPrediction.predictedRevenue) : '$0'}
-            </div>
-          </div>
-
-          {/* Action Button */}
-          {movie.status === 'open' && (
-            <button
-              onClick={() => setIsExpanded(!isExpanded)}
-              className="w-full py-2 px-3 rounded-lg bg-amber-700 hover:bg-amber-800 text-amber-50 font-black text-[11px] uppercase tracking-wider transition-all flex items-center justify-center space-x-1"
-            >
-              <Ticket className="w-3.5 h-3.5" />
-              <span>{isExpanded ? 'CLOSE STUB' : userPrediction ? 'RE-PUNCH' : 'PUNCH GUESS'}</span>
-              {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-            </button>
-          )}
-
-          {movie.status !== 'open' && (
-            <button
-              disabled
-              className="w-full py-2 px-3 rounded-lg bg-stone-300 text-stone-500 font-black text-[11px] uppercase cursor-not-allowed border border-stone-400 flex items-center justify-center space-x-1"
-            >
-              <Lock className="w-3 h-3" />
-              <span>LOCKED</span>
-            </button>
-          )}
-
-          {/* SMOOTH EXPANDED INLINE INPUT SECTION */}
-          {isExpanded && movie.status === 'open' && (
-            <form onSubmit={handleConfirmSubmit} className="space-y-3 pt-2 border-t-2 border-dashed border-amber-300 animate-fadeIn">
-              <div>
-                <label className="block text-[8px] font-black text-stone-800 uppercase tracking-wider mb-1">
-                  Enter Revenue Amount ($ USD)
-                </label>
-                <div className="relative">
-                  <div className="absolute left-2.5 top-1/2 -translate-y-1/2 text-amber-900 font-black text-base">$</div>
-                  <input
-                    type="text"
-                    value={numericAmount > 0 ? new Intl.NumberFormat('en-US').format(numericAmount) : ''}
-                    onChange={handleInputChange}
-                    placeholder="150,000,000"
-                    className="w-full pl-6 pr-2 py-1.5 rounded-lg bg-white border-2 border-amber-800 text-stone-900 font-mono font-black text-base focus:outline-none focus:border-amber-600 transition-all shadow-inner"
-                  />
+              {/* Left Ticket Header & Details */}
+              <div className="flex-1 p-5 space-y-4">
+                <div className="flex items-center space-x-4 border-b border-stone-300 pb-3">
+                  <img src={inspectingMovie.posterPath} alt={inspectingMovie.title} className="w-16 h-24 rounded-xl object-cover ring-2 ring-stone-800 shadow-md" />
+                  <div>
+                    <h2 className="text-2xl font-black text-stone-900 font-serif">{inspectingMovie.title}</h2>
+                    <div className="text-xs text-stone-600 font-mono">Release: {inspectingMovie.releaseDate} &bull; 3-Day Domestic</div>
+                    <div className="mt-1">
+                      <span className="ink-stamp ink-stamp-green text-[10px]">[ OPEN FOR GUESSES ]</span>
+                    </div>
+                  </div>
                 </div>
+
+                {/* Form Input */}
+                <form onSubmit={handleExecuteTearAndSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-black text-stone-800 uppercase tracking-wider mb-1">
+                      Enter Opening Weekend Revenue Guess ($ USD)
+                    </label>
+                    <div className="relative">
+                      <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-amber-900 font-black text-xl">$</div>
+                      <input
+                        type="text"
+                        value={numericAmount > 0 ? new Intl.NumberFormat('en-US').format(numericAmount) : ''}
+                        onChange={(e) => {
+                          const rawVal = e.target.value.replace(/[^0-9]/g, '');
+                          setNumericAmount(rawVal ? parseInt(rawVal, 10) : 0);
+                        }}
+                        placeholder="150,000,000"
+                        className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-white border-2 border-amber-800 text-stone-900 font-mono font-black text-xl focus:outline-none focus:border-amber-600 transition-all shadow-inner"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Quick add chips */}
+                  <div className="grid grid-cols-4 gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => setNumericAmount((prev) => prev + 10000000)}
+                      className="py-1.5 rounded-lg bg-stone-200 hover:bg-stone-300 text-stone-900 text-xs font-black transition-all border border-stone-400"
+                    >
+                      +$10M
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setNumericAmount((prev) => prev + 25000000)}
+                      className="py-1.5 rounded-lg bg-stone-200 hover:bg-stone-300 text-stone-900 text-xs font-black transition-all border border-stone-400"
+                    >
+                      +$25M
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setNumericAmount((prev) => prev + 50000000)}
+                      className="py-1.5 rounded-lg bg-stone-200 hover:bg-stone-300 text-stone-900 text-xs font-black transition-all border border-stone-400"
+                    >
+                      +$50M
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setNumericAmount(0)}
+                      className="py-1.5 rounded-lg bg-red-100 hover:bg-red-200 text-red-900 text-xs font-black transition-all border border-red-300"
+                    >
+                      Clear
+                    </button>
+                  </div>
+
+                  {/* Early Bird Multiplier */}
+                  <div className="p-2.5 rounded-xl bg-amber-100 border border-amber-300 text-xs flex items-center justify-between">
+                    <div className="flex items-center space-x-1.5 text-amber-950 font-extrabold">
+                      <Zap className="w-4 h-4 text-amber-700" />
+                      <span>Early Bird Lead Time Multiplier:</span>
+                    </div>
+                    <span className="font-mono font-black text-amber-900">{calculateScore(numericAmount, numericAmount, new Date().toISOString(), inspectingMovie.releaseDate).earlyBirdMultiplier}x</span>
+                  </div>
+
+                  {/* TEAR & SUBMIT STUB BUTTON */}
+                  <button
+                    type="submit"
+                    disabled={numericAmount <= 0 || isTearing}
+                    className="w-full py-3.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-emerald-50 font-black text-xs uppercase tracking-wider shadow-lg transition-all flex items-center justify-center space-x-2"
+                  >
+                    <Scissors className="w-4 h-4" />
+                    <span>TEAR STUB & LOCK IN GUESS ({formatCurrency(numericAmount)})</span>
+                  </button>
+                </form>
               </div>
 
-              {/* Quick Add Chips */}
-              <div className="grid grid-cols-4 gap-1">
-                <button
-                  type="button"
-                  onClick={() => handleQuickAdd(10)}
-                  className="py-1 rounded bg-stone-200 hover:bg-stone-300 text-stone-900 text-[9px] font-black transition-all border border-stone-400"
-                >
-                  +$10M
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleQuickAdd(25)}
-                  className="py-1 rounded bg-stone-200 hover:bg-stone-300 text-stone-900 text-[9px] font-black transition-all border border-stone-400"
-                >
-                  +$25M
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleQuickAdd(50)}
-                  className="py-1 rounded bg-stone-200 hover:bg-stone-300 text-stone-900 text-[9px] font-black transition-all border border-stone-400"
-                >
-                  +$50M
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setNumericAmount(0)}
-                  className="py-1 rounded bg-red-100 hover:bg-red-200 text-red-900 text-[9px] font-black transition-all border border-red-300"
-                >
-                  Clear
-                </button>
-              </div>
-
-              {/* Early Bird Multiplier */}
-              <div className="p-1.5 rounded-lg bg-amber-100 border border-amber-300 text-[10px] flex items-center justify-between">
-                <div className="flex items-center space-x-1 text-amber-950 font-extrabold text-[9px]">
-                  <Zap className="w-3 h-3 text-amber-700" />
-                  <span>Early Bird:</span>
-                </div>
-                <span className="font-mono font-black text-amber-900">{sampleScoring.earlyBirdMultiplier}x</span>
-              </div>
-
-              {/* Confirm Punch Button */}
-              <button
-                type="submit"
-                disabled={numericAmount <= 0}
-                className="w-full py-2.5 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-emerald-50 font-black text-[11px] uppercase tracking-wider shadow-md transition-all flex items-center justify-center space-x-1"
+              {/* RIGHT TEAR-OFF STUB (ANIMATED TOSS PORTION) */}
+              <div
+                className={`md:w-56 p-5 bg-[#f4efdf] flex flex-col justify-between space-y-4 border-t md:border-t-0 border-l border-stone-300 transition-all ${
+                  isTearing ? 'animate-stub-toss' : ''
+                }`}
               >
-                <Check className="w-3.5 h-3.5 stroke-[3]" />
-                <span>CONFIRM PUNCH</span>
-              </button>
-            </form>
-          )}
+                <div className="flex items-center justify-between border-b border-stone-300 pb-2">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-amber-900">PERFORATED STUB</span>
+                  <Scissors className="w-3.5 h-3.5 text-stone-500" />
+                </div>
 
+                <div className="text-center py-4">
+                  <div className="text-[10px] uppercase font-black text-stone-500">PUNCHED GUESS</div>
+                  <div className="text-2xl font-black text-amber-900 font-mono tracking-tight mt-1">
+                    {formatCurrency(numericAmount)}
+                  </div>
+                  <div className="mt-2 inline-block px-2 py-0.5 rounded bg-amber-200 text-amber-900 font-black text-[10px] font-mono border border-amber-400">
+                    ADMIT ONE
+                  </div>
+                </div>
+
+                <div className="text-[9px] text-stone-500 text-center font-mono italic">
+                  Submitting will physically tear and toss this stub off-screen!
+                </div>
+              </div>
+
+            </div>
+
+          </div>
         </div>
+      )}
 
-      </div>
     </div>
   );
 };
