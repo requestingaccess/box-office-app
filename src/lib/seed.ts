@@ -200,40 +200,50 @@ export const INITIAL_PREDICTIONS: Prediction[] = [
     userId: 'user-you',
     movieId: 'movie-2',
     predictedRevenue: 150000000,
-    submittedAt: '2026-05-25T12:00:00Z', // 20 days early => 1.25x
-    ...calculateScore(150000000, 154201219, '2026-05-25T12:00:00Z', '2026-06-14'),
+    submittedAt: '2026-05-25T12:00:00Z',
+    scoreAwarded: calculateScore(150000000, 154201219, '2026-05-25T12:00:00Z', '2026-06-14').finalScore,
+    earlyBirdMultiplier: calculateScore(150000000, 154201219, '2026-05-25T12:00:00Z', '2026-06-14').earlyBirdMultiplier,
+    errorPercentage: calculateScore(150000000, 154201219, '2026-05-25T12:00:00Z', '2026-06-14').errorPercentage,
   },
   {
     id: 'pred-you-3',
     userId: 'user-you',
     movieId: 'movie-3',
     predictedRevenue: 72000000,
-    submittedAt: '2026-06-25T12:00:00Z', // 8 days early => 1.10x
-    ...calculateScore(72000000, 75000000, '2026-06-25T12:00:00Z', '2026-07-03'),
+    submittedAt: '2026-06-25T12:00:00Z',
+    scoreAwarded: calculateScore(72000000, 75000000, '2026-06-25T12:00:00Z', '2026-07-03').finalScore,
+    earlyBirdMultiplier: calculateScore(72000000, 75000000, '2026-06-25T12:00:00Z', '2026-07-03').earlyBirdMultiplier,
+    errorPercentage: calculateScore(72000000, 75000000, '2026-06-25T12:00:00Z', '2026-07-03').errorPercentage,
   },
   {
     id: 'pred-you-4',
     userId: 'user-you',
     movieId: 'movie-4',
     predictedRevenue: 85000000,
-    submittedAt: '2026-07-10T12:00:00Z', // 9 days early => 1.10x
-    ...calculateScore(85000000, 81250000, '2026-07-10T12:00:00Z', '2026-07-19'),
+    submittedAt: '2026-07-10T12:00:00Z',
+    scoreAwarded: calculateScore(85000000, 81250000, '2026-07-10T12:00:00Z', '2026-07-19').finalScore,
+    earlyBirdMultiplier: calculateScore(85000000, 81250000, '2026-07-10T12:00:00Z', '2026-07-19').earlyBirdMultiplier,
+    errorPercentage: calculateScore(85000000, 81250000, '2026-07-10T12:00:00Z', '2026-07-19').errorPercentage,
   },
   {
     id: 'pred-you-8',
     userId: 'user-you',
     movieId: 'movie-8',
     predictedRevenue: 80000000,
-    submittedAt: '2026-04-20T12:00:00Z', // 20 days early => 1.25x
-    ...calculateScore(80000000, 82500000, '2026-04-20T12:00:00Z', '2026-05-10'),
+    submittedAt: '2026-04-20T12:00:00Z',
+    scoreAwarded: calculateScore(80000000, 82500000, '2026-04-20T12:00:00Z', '2026-05-10').finalScore,
+    earlyBirdMultiplier: calculateScore(80000000, 82500000, '2026-04-20T12:00:00Z', '2026-05-10').earlyBirdMultiplier,
+    errorPercentage: calculateScore(80000000, 82500000, '2026-04-20T12:00:00Z', '2026-05-10').errorPercentage,
   },
   {
     id: 'pred-you-9',
     userId: 'user-you',
     movieId: 'movie-9',
     predictedRevenue: 125000000,
-    submittedAt: '2026-05-01T12:00:00Z', // 23 days early => 1.25x
-    ...calculateScore(125000000, 120500000, '2026-05-01T12:00:00Z', '2026-05-24'),
+    submittedAt: '2026-05-01T12:00:00Z',
+    scoreAwarded: calculateScore(125000000, 120500000, '2026-05-01T12:00:00Z', '2026-05-24').finalScore,
+    earlyBirdMultiplier: calculateScore(125000000, 120500000, '2026-05-01T12:00:00Z', '2026-05-24').earlyBirdMultiplier,
+    errorPercentage: calculateScore(125000000, 120500000, '2026-05-01T12:00:00Z', '2026-05-24').errorPercentage,
   },
 
   // CinemaKing
@@ -243,7 +253,9 @@ export const INITIAL_PREDICTIONS: Prediction[] = [
     movieId: 'movie-2',
     predictedRevenue: 155000000,
     submittedAt: '2026-05-20T12:00:00Z',
-    ...calculateScore(155000000, 154201219, '2026-05-20T12:00:00Z', '2026-06-14'),
+    scoreAwarded: calculateScore(155000000, 154201219, '2026-05-20T12:00:00Z', '2026-06-14').finalScore,
+    earlyBirdMultiplier: calculateScore(155000000, 154201219, '2026-05-20T12:00:00Z', '2026-06-14').earlyBirdMultiplier,
+    errorPercentage: calculateScore(155000000, 154201219, '2026-05-20T12:00:00Z', '2026-06-14').errorPercentage,
   },
   {
     id: 'pred-ck-3',
@@ -251,7 +263,9 @@ export const INITIAL_PREDICTIONS: Prediction[] = [
     movieId: 'movie-3',
     predictedRevenue: 76000000,
     submittedAt: '2026-06-20T12:00:00Z',
-    ...calculateScore(76000000, 75000000, '2026-06-20T12:00:00Z', '2026-07-03'),
+    scoreAwarded: calculateScore(76000000, 75000000, '2026-06-20T12:00:00Z', '2026-07-03').finalScore,
+    earlyBirdMultiplier: calculateScore(76000000, 75000000, '2026-06-20T12:00:00Z', '2026-07-03').earlyBirdMultiplier,
+    errorPercentage: calculateScore(76000000, 75000000, '2026-06-20T12:00:00Z', '2026-07-03').errorPercentage,
   },
   {
     id: 'pred-ck-4',
@@ -259,7 +273,9 @@ export const INITIAL_PREDICTIONS: Prediction[] = [
     movieId: 'movie-4',
     predictedRevenue: 80000000,
     submittedAt: '2026-07-05T12:00:00Z',
-    ...calculateScore(80000000, 81250000, '2026-07-05T12:00:00Z', '2026-07-19'),
+    scoreAwarded: calculateScore(80000000, 81250000, '2026-07-05T12:00:00Z', '2026-07-19').finalScore,
+    earlyBirdMultiplier: calculateScore(80000000, 81250000, '2026-07-05T12:00:00Z', '2026-07-19').earlyBirdMultiplier,
+    errorPercentage: calculateScore(80000000, 81250000, '2026-07-05T12:00:00Z', '2026-07-19').errorPercentage,
   },
   {
     id: 'pred-ck-8',
@@ -267,7 +283,9 @@ export const INITIAL_PREDICTIONS: Prediction[] = [
     movieId: 'movie-8',
     predictedRevenue: 83000000,
     submittedAt: '2026-04-22T12:00:00Z',
-    ...calculateScore(83000000, 82500000, '2026-04-22T12:00:00Z', '2026-05-10'),
+    scoreAwarded: calculateScore(83000000, 82500000, '2026-04-22T12:00:00Z', '2026-05-10').finalScore,
+    earlyBirdMultiplier: calculateScore(83000000, 82500000, '2026-04-22T12:00:00Z', '2026-05-10').earlyBirdMultiplier,
+    errorPercentage: calculateScore(83000000, 82500000, '2026-04-22T12:00:00Z', '2026-05-10').errorPercentage,
   },
   {
     id: 'pred-ck-9',
@@ -275,7 +293,9 @@ export const INITIAL_PREDICTIONS: Prediction[] = [
     movieId: 'movie-9',
     predictedRevenue: 119000000,
     submittedAt: '2026-05-05T12:00:00Z',
-    ...calculateScore(119000000, 120500000, '2026-05-05T12:00:00Z', '2026-05-24'),
+    scoreAwarded: calculateScore(119000000, 120500000, '2026-05-05T12:00:00Z', '2026-05-24').finalScore,
+    earlyBirdMultiplier: calculateScore(119000000, 120500000, '2026-05-05T12:00:00Z', '2026-05-24').earlyBirdMultiplier,
+    errorPercentage: calculateScore(119000000, 120500000, '2026-05-05T12:00:00Z', '2026-05-24').errorPercentage,
   },
 
   // BoxOfficePro
@@ -285,7 +305,9 @@ export const INITIAL_PREDICTIONS: Prediction[] = [
     movieId: 'movie-2',
     predictedRevenue: 140000000,
     submittedAt: '2026-06-10T12:00:00Z',
-    ...calculateScore(140000000, 154201219, '2026-06-10T12:00:00Z', '2026-06-14'),
+    scoreAwarded: calculateScore(140000000, 154201219, '2026-06-10T12:00:00Z', '2026-06-14').finalScore,
+    earlyBirdMultiplier: calculateScore(140000000, 154201219, '2026-06-10T12:00:00Z', '2026-06-14').earlyBirdMultiplier,
+    errorPercentage: calculateScore(140000000, 154201219, '2026-06-10T12:00:00Z', '2026-06-14').errorPercentage,
   },
   {
     id: 'pred-bop-3',
@@ -293,7 +315,9 @@ export const INITIAL_PREDICTIONS: Prediction[] = [
     movieId: 'movie-3',
     predictedRevenue: 70000000,
     submittedAt: '2026-07-01T12:00:00Z',
-    ...calculateScore(70000000, 75000000, '2026-07-01T12:00:00Z', '2026-07-03'),
+    scoreAwarded: calculateScore(70000000, 75000000, '2026-07-01T12:00:00Z', '2026-07-03').finalScore,
+    earlyBirdMultiplier: calculateScore(70000000, 75000000, '2026-07-01T12:00:00Z', '2026-07-03').earlyBirdMultiplier,
+    errorPercentage: calculateScore(70000000, 75000000, '2026-07-01T12:00:00Z', '2026-07-03').errorPercentage,
   },
   {
     id: 'pred-bop-4',
@@ -301,7 +325,9 @@ export const INITIAL_PREDICTIONS: Prediction[] = [
     movieId: 'movie-4',
     predictedRevenue: 90000000,
     submittedAt: '2026-07-15T12:00:00Z',
-    ...calculateScore(90000000, 81250000, '2026-07-15T12:00:00Z', '2026-07-19'),
+    scoreAwarded: calculateScore(90000000, 81250000, '2026-07-15T12:00:00Z', '2026-07-19').finalScore,
+    earlyBirdMultiplier: calculateScore(90000000, 81250000, '2026-07-15T12:00:00Z', '2026-07-19').earlyBirdMultiplier,
+    errorPercentage: calculateScore(90000000, 81250000, '2026-07-15T12:00:00Z', '2026-07-19').errorPercentage,
   },
   {
     id: 'pred-bop-8',
@@ -309,7 +335,9 @@ export const INITIAL_PREDICTIONS: Prediction[] = [
     movieId: 'movie-8',
     predictedRevenue: 75000000,
     submittedAt: '2026-05-01T12:00:00Z',
-    ...calculateScore(75000000, 82500000, '2026-05-01T12:00:00Z', '2026-05-10'),
+    scoreAwarded: calculateScore(75000000, 82500000, '2026-05-01T12:00:00Z', '2026-05-10').finalScore,
+    earlyBirdMultiplier: calculateScore(75000000, 82500000, '2026-05-01T12:00:00Z', '2026-05-10').earlyBirdMultiplier,
+    errorPercentage: calculateScore(75000000, 82500000, '2026-05-01T12:00:00Z', '2026-05-10').errorPercentage,
   },
   {
     id: 'pred-bop-9',
@@ -317,7 +345,9 @@ export const INITIAL_PREDICTIONS: Prediction[] = [
     movieId: 'movie-9',
     predictedRevenue: 110000000,
     submittedAt: '2026-05-15T12:00:00Z',
-    ...calculateScore(110000000, 120500000, '2026-05-15T12:00:00Z', '2026-05-24'),
+    scoreAwarded: calculateScore(110000000, 120500000, '2026-05-15T12:00:00Z', '2026-05-24').finalScore,
+    earlyBirdMultiplier: calculateScore(110000000, 120500000, '2026-05-15T12:00:00Z', '2026-05-24').earlyBirdMultiplier,
+    errorPercentage: calculateScore(110000000, 120500000, '2026-05-15T12:00:00Z', '2026-05-24').errorPercentage,
   },
 
   // MovieBuffNewbie (Only 2 predictions - NOT QUALIFIED for leaderboard yet)
@@ -327,7 +357,9 @@ export const INITIAL_PREDICTIONS: Prediction[] = [
     movieId: 'movie-2',
     predictedRevenue: 160000000,
     submittedAt: '2026-06-12T12:00:00Z',
-    ...calculateScore(160000000, 154201219, '2026-06-12T12:00:00Z', '2026-06-14'),
+    scoreAwarded: calculateScore(160000000, 154201219, '2026-06-12T12:00:00Z', '2026-06-14').finalScore,
+    earlyBirdMultiplier: calculateScore(160000000, 154201219, '2026-06-12T12:00:00Z', '2026-06-14').earlyBirdMultiplier,
+    errorPercentage: calculateScore(160000000, 154201219, '2026-06-12T12:00:00Z', '2026-06-14').errorPercentage,
   },
   {
     id: 'pred-mbn-3',
@@ -335,6 +367,8 @@ export const INITIAL_PREDICTIONS: Prediction[] = [
     movieId: 'movie-3',
     predictedRevenue: 80000000,
     submittedAt: '2026-07-02T12:00:00Z',
-    ...calculateScore(80000000, 75000000, '2026-07-02T12:00:00Z', '2026-07-03'),
+    scoreAwarded: calculateScore(80000000, 75000000, '2026-07-02T12:00:00Z', '2026-07-03').finalScore,
+    earlyBirdMultiplier: calculateScore(80000000, 75000000, '2026-07-02T12:00:00Z', '2026-07-03').earlyBirdMultiplier,
+    errorPercentage: calculateScore(80000000, 75000000, '2026-07-02T12:00:00Z', '2026-07-03').errorPercentage,
   },
 ];

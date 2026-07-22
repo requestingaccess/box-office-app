@@ -115,7 +115,7 @@ class DataStore {
     this.movies.forEach((m) => {
       const releaseDate = new Date(m.releaseDate);
       const diffDays = Math.ceil((releaseDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-      if (m.status === 'hidden' || (diffDays <= 30 && m.status === 'hidden')) {
+      if (m.status === 'hidden' || (diffDays <= 30 && m.status !== 'open')) {
         m.status = 'open';
         openedCount++;
       }
