@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Movie, Prediction } from '@/lib/types';
 import { calculateScore, formatCurrency } from '@/lib/scoring';
-import { X, Sparkles, AlertCircle, Clock, Zap, DollarSign, Check } from 'lucide-react';
+import { X, Ticket, Check, Zap, DollarSign } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 interface PredictionModalProps {
@@ -19,16 +19,13 @@ export const PredictionModal: React.FC<PredictionModalProps> = ({
   onClose,
   onSubmitPrediction,
 }) => {
-  const [amountInput, setAmountInput] = useState<string>('');
   const [numericAmount, setNumericAmount] = useState<number>(0);
 
   useEffect(() => {
     if (existingPrediction) {
       setNumericAmount(existingPrediction.predictedRevenue);
-      setAmountInput(existingPrediction.predictedRevenue.toString());
     } else {
-      setAmountInput('150000000'); // Default starting suggestion ($150M)
-      setNumericAmount(150000000);
+      setNumericAmount(150000000); // Default $150M suggestion
     }
   }, [existingPrediction, movie]);
 
@@ -36,161 +33,144 @@ export const PredictionModal: React.FC<PredictionModalProps> = ({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawVal = e.target.value.replace(/[^0-9]/g, '');
-    setAmountInput(rawVal);
     setNumericAmount(rawVal ? parseInt(rawVal, 10) : 0);
   };
 
   const handleQuickAdd = (millions: number) => {
-    const newAmount = numericAmount + millions * 1_000_000;
-    setNumericAmount(newAmount);
-    setAmountInput(newAmount.toString());
+    setNumericAmount((prev) => prev + millions * 1_000_000);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (numericAmount <= 0) return;
 
-    // Trigger celebratory confetti
     try {
       confetti({
-        particleCount: 60,
-        spread: 70,
+        particleCount: 70,
+        spread: 80,
         origin: { y: 0.6 },
-        colors: ['#f59e0b', '#10b981', '#6366f1'],
+        colors: ['#f59e0b', '#dc2626', '#10b981'],
       });
-    } catch {
-      // Fallback
-    }
+    } catch {}
 
     onSubmitPrediction(movie.id, numericAmount);
     onClose();
   };
 
-  // Preview score simulation assuming an actual revenue target
   const sampleTarget = numericAmount > 0 ? numericAmount : 100000000;
   const sampleScoring = calculateScore(numericAmount, sampleTarget, new Date().toISOString(), movie.releaseDate);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn">
-      <div className="relative w-full max-w-lg glass-panel rounded-3xl p-6 sm:p-8 border border-amber-500/30 shadow-2xl overflow-hidden bg-slate-900/95">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-sm animate-fadeIn">
+      <div className="relative w-full max-w-lg bg-slate-900 rounded-2xl border-4 border-amber-600 shadow-2xl overflow-hidden font-ledger">
         
-        {/* Background glow */}
-        <div className="absolute -right-16 -top-16 w-60 h-60 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="absolute top-5 right-5 p-2 rounded-full bg-slate-800/80 text-slate-400 hover:text-white hover:bg-slate-700 transition-all"
-        >
-          <X className="w-5 h-5" />
-        </button>
-
-        {/* Modal Header */}
-        <div className="flex items-center space-x-3 mb-6">
-          <img src={movie.posterPath} alt={movie.title} className="w-14 h-20 rounded-xl object-cover ring-2 ring-amber-500/40" />
-          <div>
-            <div className="flex items-center space-x-2 text-xs text-amber-400 font-semibold mb-1">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Domestic Opening Weekend (3-Day)</span>
-            </div>
-            <h2 className="text-xl font-black text-white">{movie.title}</h2>
-            <div className="text-xs text-slate-400">Releases Friday: {movie.releaseDate}</div>
+        {/* Box Office Ticket Window Banner Header */}
+        <div className="bg-amber-600 text-slate-950 px-6 py-4 flex items-center justify-between border-b-2 border-amber-700">
+          <div className="flex items-center space-x-2 font-black uppercase text-sm tracking-wider">
+            <Ticket className="w-5 h-5 fill-slate-950" />
+            <span>Ticket Dispenser Window #1</span>
           </div>
+          <button
+            onClick={onClose}
+            className="p-1 rounded bg-amber-700 text-slate-950 hover:bg-amber-800 transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
 
-        {/* Prediction Form */}
-        <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Form Container */}
+        <form onSubmit={handleSubmit} className="p-6 space-y-5 bg-slate-950">
           
-          {/* Currency Input Field */}
+          {/* Movie Details Header */}
+          <div className="flex items-center space-x-4 bg-slate-900 p-3 rounded-xl border border-slate-800">
+            <img src={movie.posterPath} alt={movie.title} className="w-12 h-16 rounded object-cover border border-amber-500/40" />
+            <div>
+              <div className="text-[10px] uppercase font-bold text-amber-400">ADM-ONE TICKET ISSUE</div>
+              <h3 className="text-base font-black text-white">{movie.title}</h3>
+              <div className="text-xs text-slate-400">Release Date: {movie.releaseDate}</div>
+            </div>
+          </div>
+
+          {/* Dynamic Printed Ticket Stub Dispenser Graphic */}
+          <div className="ticket-stub p-4 rounded-xl border-2 border-amber-600 space-y-2 text-slate-950 shadow-inner relative">
+            <div className="flex items-center justify-between border-b border-amber-900/20 pb-2">
+              <span className="text-[10px] font-black uppercase text-amber-900">BOX OFFICE GUEST PREDICTION STUB</span>
+              <span className="rubber-stamp stamp-green text-[10px]">
+                {sampleScoring.earlyBirdMultiplier > 1.0 ? `${sampleScoring.earlyBirdMultiplier}x EARLY BIRD` : 'STANDARD STUB'}
+              </span>
+            </div>
+
+            <div className="py-2 text-center">
+              <div className="text-[10px] font-bold uppercase text-amber-900">ISSUED GUESS AMOUNT</div>
+              <div className="text-3xl font-black text-slate-950 tracking-wider">
+                {formatCurrency(numericAmount)}
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between text-[10px] font-bold text-amber-900 border-t border-amber-900/20 pt-2">
+              <span>0% ERR: +100 PTS</span>
+              <span>30% ERR: 0 PTS</span>
+              <span>FLOOR: -50 PTS</span>
+            </div>
+          </div>
+
+          {/* Revenue Dollar Input Field */}
           <div>
-            <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
-              Enter Your Revenue Guess ($ USD)
+            <label className="block text-xs font-bold text-amber-400 uppercase tracking-wider mb-2">
+              Type Opening Revenue ($ USD)
             </label>
             <div className="relative">
-              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-amber-400 font-black text-xl">$</div>
+              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-amber-500 font-black text-xl">$</div>
               <input
                 type="text"
                 value={numericAmount > 0 ? new Intl.NumberFormat('en-US').format(numericAmount) : ''}
                 onChange={handleInputChange}
                 placeholder="150,000,000"
-                className="w-full pl-10 pr-4 py-3.5 rounded-2xl bg-slate-950 border-2 border-amber-500/40 text-white font-mono font-black text-2xl focus:outline-none focus:border-amber-400 focus:ring-4 focus:ring-amber-500/20 transition-all"
+                className="w-full pl-8 pr-4 py-3 rounded-xl bg-slate-900 border-2 border-amber-500/50 text-white font-mono font-black text-xl focus:outline-none focus:border-amber-400"
               />
-            </div>
-            <div className="mt-2 text-xs text-right font-semibold text-amber-300">
-              Formatted: {formatCurrency(numericAmount)}
             </div>
           </div>
 
-          {/* Quick Adjust Buttons */}
+          {/* Quick Increment Buttons */}
           <div className="grid grid-cols-4 gap-2">
             <button
               type="button"
               onClick={() => handleQuickAdd(10)}
-              className="py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-all border border-slate-700"
+              className="py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-700"
             >
               +$10M
             </button>
             <button
               type="button"
               onClick={() => handleQuickAdd(25)}
-              className="py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-all border border-slate-700"
+              className="py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-700"
             >
               +$25M
             </button>
             <button
               type="button"
               onClick={() => handleQuickAdd(50)}
-              className="py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-all border border-slate-700"
+              className="py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-700"
             >
               +$50M
             </button>
             <button
               type="button"
               onClick={() => setNumericAmount(0)}
-              className="py-1.5 rounded-xl bg-rose-950/60 hover:bg-rose-900/60 text-rose-300 text-xs font-bold transition-all border border-rose-800/40"
+              className="py-1.5 rounded bg-rose-950 hover:bg-rose-900 text-rose-300 text-xs font-bold border border-rose-800"
             >
               Clear
             </button>
           </div>
 
-          {/* Early Bird Multiplier Badge */}
-          <div className="p-3 rounded-2xl bg-indigo-950/60 border border-indigo-500/30 flex items-center justify-between">
-            <div className="flex items-center space-x-2.5">
-              <Zap className="w-5 h-5 text-indigo-400 animate-pulse" />
-              <div>
-                <div className="text-xs font-extrabold text-indigo-200">Early Bird Lead Time</div>
-                <div className="text-[11px] text-indigo-300">Submitting in advance boosts positive scores</div>
-              </div>
-            </div>
-            <div className="px-3 py-1 rounded-xl bg-indigo-500/20 border border-indigo-400/40 text-indigo-300 font-extrabold text-xs">
-              {sampleScoring.earlyBirdMultiplier > 1.0 ? `${sampleScoring.earlyBirdMultiplier}x Multiplier` : '1.0x (Standard)'}
-            </div>
-          </div>
-
-          {/* Scoring Math Preview Card */}
-          <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-2">
-            <div className="flex items-center justify-between text-xs text-slate-400">
-              <span>Perfect Accuracy (0% error):</span>
-              <span className="font-bold text-emerald-400">+100.0 pts</span>
-            </div>
-            <div className="flex items-center justify-between text-xs text-slate-400">
-              <span>30% Variance Breakeven:</span>
-              <span className="font-bold text-amber-400">0.0 pts</span>
-            </div>
-            <div className="flex items-center justify-between text-xs text-slate-400">
-              <span>Hard Penalty Floor:</span>
-              <span className="font-bold text-rose-400">-50.0 pts max penalty</span>
-            </div>
-          </div>
-
-          {/* Submit Button */}
+          {/* Lock Ticket Submit Button */}
           <button
             type="submit"
             disabled={numericAmount <= 0}
-            className="w-full py-4 rounded-2xl gold-gradient-bg text-slate-950 font-black text-sm uppercase tracking-wider shadow-xl shadow-amber-500/25 hover:brightness-110 active:scale-98 transition-all flex items-center justify-center space-x-2"
+            className="w-full py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm uppercase tracking-wider shadow-lg flex items-center justify-center space-x-2 transition-all border border-amber-400 cursor-pointer"
           >
             <Check className="w-5 h-5 stroke-[3]" />
-            <span>Lock In Prediction ({formatCurrency(numericAmount)})</span>
+            <span>PRINT & LOCK TICKET STUB</span>
           </button>
         </form>
 
