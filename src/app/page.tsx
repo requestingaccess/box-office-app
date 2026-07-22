@@ -5,7 +5,6 @@ import { store } from '@/lib/store';
 import { Movie, Prediction } from '@/lib/types';
 import { Navbar } from '@/components/Navbar';
 import { MovieFeed } from '@/components/MovieFeed';
-import { PredictionModal } from '@/components/PredictionModal';
 import { Leaderboard } from '@/components/Leaderboard';
 import { PlayerProfile } from '@/components/PlayerProfile';
 import { RulesSection } from '@/components/RulesSection';
@@ -16,7 +15,6 @@ export default function Home() {
   const [movies, setMovies] = useState<Movie[]>(() => store.getMovies());
   const [activeUser, setActiveUser] = useState(() => store.getActiveUser());
   const [userPredictions, setUserPredictions] = useState<Prediction[]>(() => store.getUserPredictions(activeUser.id));
-  const [selectedMovieForPrediction, setSelectedMovieForPrediction] = useState<Movie | null>(null);
   const [toastMessage, setToastMessage] = useState<{ text: string; type: 'success' | 'info' } | null>(null);
   const [isPipelineRunning, setIsPipelineRunning] = useState<boolean>(false);
 
@@ -104,7 +102,7 @@ export default function Home() {
           <MovieFeed
             movies={movies}
             userPredictions={userPredictions}
-            onOpenPredictionModal={(movie) => setSelectedMovieForPrediction(movie)}
+            onSubmitPrediction={handleSubmitPrediction}
           />
         )}
 
@@ -130,21 +128,11 @@ export default function Home() {
 
       </main>
 
-      {/* Modal Drawer for Predictions */}
-      {selectedMovieForPrediction && (
-        <PredictionModal
-          movie={selectedMovieForPrediction}
-          existingPrediction={userPredictions.find((p) => p.movieId === selectedMovieForPrediction.id)}
-          onClose={() => setSelectedMovieForPrediction(null)}
-          onSubmitPrediction={handleSubmitPrediction}
-        />
-      )}
-
       {/* Footer */}
       <footer className="border-t-2 border-[#c8bba2] py-6 text-center text-xs font-bold text-stone-600 bg-[#e8dec7]">
         <div className="flex items-center justify-center space-x-2">
           <Ticket className="w-4 h-4 text-amber-800" />
-          <span>BOX OFFICE PREDICTION GAME &bull; RETRO MOVIE TICKET KIOSK &bull; EST TIMEZONE ENFORCED</span>
+          <span>BOX OFFICE PREDICTION GAME &bull; HORIZONTAL ADMISSION TICKET STUBS &bull; EST TIMEZONE ENFORCED</span>
         </div>
       </footer>
 
