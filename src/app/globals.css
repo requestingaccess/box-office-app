@@ -41,60 +41,112 @@
   background: #a89a80;
 }
 
-/* Horizontal Ticket Stub Cards */
-.horizontal-ticket-stub {
+/* Borderless Physical Ticket Stub with Persistent Shadow */
+.borderless-ticket-stub {
   background-color: var(--bg-paper-card);
-  border: 2px solid var(--border-paper-dark);
-  box-shadow: 0 4px 16px -2px rgba(28, 25, 23, 0.08), 0 2px 6px -1px rgba(28, 25, 23, 0.04);
+  box-shadow: 0 6px 18px -2px rgba(28, 25, 23, 0.12), 0 2px 6px -1px rgba(28, 25, 23, 0.06);
   position: relative;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: none !important;
 }
 
-.horizontal-ticket-stub:hover {
-  border-color: var(--cinema-gold);
-  box-shadow: 0 10px 25px -3px rgba(217, 119, 6, 0.15), 0 4px 10px -2px rgba(28, 25, 23, 0.08);
+/* Hover Lift Effect with Elevation Shadow & Dynamic Skew */
+.borderless-ticket-stub:hover {
+  background-color: var(--bg-paper-hover);
+  box-shadow: 0 20px 35px -5px rgba(28, 25, 23, 0.22), 0 8px 16px -2px rgba(217, 119, 6, 0.15);
+  transform: translateY(-10px) scale(1.025) rotate(-1.5deg) !important;
+  z-index: 30;
 }
 
-/* Vertical Perforation Divider Line (Between Ticket Details & Stub) */
+/* Organic Resting Rotation Skews */
+.ticket-skew-left-1 { transform: rotate(-1.2deg); }
+.ticket-skew-right-1 { transform: rotate(1.1deg); }
+.ticket-skew-left-2 { transform: rotate(-0.8deg); }
+.ticket-skew-right-2 { transform: rotate(1.4deg); }
+
+/* Vertical Perforation Divider Line */
 .ticket-vertical-perforation {
-  border-left: 2px dashed #c8bba2;
+  border-left: 2.5px dashed #c8bba2;
   position: relative;
 }
 
-/* Top & Bottom Circular Perforation Cutouts */
+/* Exaggerated Circular Perforation Notches (Top & Bottom of Perforation) */
 .ticket-notch-top {
   position: absolute;
-  top: -12px;
-  width: 22px;
-  height: 22px;
+  top: -14px;
+  width: 24px;
+  height: 24px;
   background-color: var(--bg-parchment);
-  border-bottom: 2px solid var(--border-paper-dark);
   border-radius: 0 0 50% 50%;
   z-index: 20;
 }
 
 .ticket-notch-bottom {
   position: absolute;
-  bottom: -12px;
-  width: 22px;
-  height: 22px;
+  bottom: -14px;
+  width: 24px;
+  height: 24px;
   background-color: var(--bg-parchment);
-  border-top: 2px solid var(--border-paper-dark);
   border-radius: 50% 50% 0 0;
+  z-index: 20;
+}
+
+/* Exaggerated 4 Corner Cutouts */
+.ticket-corner-tl {
+  position: absolute;
+  top: -12px;
+  left: -12px;
+  width: 24px;
+  height: 24px;
+  background-color: var(--bg-parchment);
+  border-radius: 0 0 50% 0;
+  z-index: 20;
+}
+
+.ticket-corner-tr {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  width: 24px;
+  height: 24px;
+  background-color: var(--bg-parchment);
+  border-radius: 0 0 0 50%;
+  z-index: 20;
+}
+
+.ticket-corner-bl {
+  position: absolute;
+  bottom: -12px;
+  left: -12px;
+  width: 24px;
+  height: 24px;
+  background-color: var(--bg-parchment);
+  border-radius: 0 50% 0 0;
+  z-index: 20;
+}
+
+.ticket-corner-br {
+  position: absolute;
+  bottom: -12px;
+  right: -12px;
+  width: 24px;
+  height: 24px;
+  background-color: var(--bg-parchment);
+  border-radius: 50% 0 0 0;
   z-index: 20;
 }
 
 /* Ink Stamp Badges */
 .ink-stamp {
   border: 2px solid currentColor;
-  padding: 0.2rem 0.6rem;
+  padding: 0.15rem 0.5rem;
   font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   border-radius: 4px;
   display: inline-block;
   transform: rotate(-3deg);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
 
 .ink-stamp-red {
@@ -117,6 +169,5 @@
 
 .paper-panel {
   background-color: var(--bg-paper-card);
-  border: 2px solid var(--border-paper-dark);
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
