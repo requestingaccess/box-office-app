@@ -1,0 +1,191 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-parchment: #f4efdf;
+    --bg-paper-card: #fcf9f2;
+    --bg-paper-hover: #ffffff;
+    --border-paper: #e2d8c3;
+    --border-paper-dark: #c8bba2;
+    --text-ink: #1c1917;
+    --text-ink-muted: #57534e;
+    --cinema-red: #dc2626;
+    --cinema-gold: #d97706;
+    --cinema-green: #15803d;
+  }
+
+  body {
+    background-color: var(--bg-parchment);
+    background-image: radial-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 0);
+    background-size: 24px 24px;
+    color: var(--text-ink);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+}
+
+/* Custom Paper Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f4efdf;
+}
+::-webkit-scrollbar-thumb {
+  background: #c8bba2;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a89a80;
+}
+
+/* Drop-Shadow Wrapper Tracing Masked Ticket Shape */
+/* Drop-Shadow Wrapper Tracing Masked Ticket Shape */
+.ticket-shadow-wrapper {
+  filter: drop-shadow(0 6px 14px rgba(28, 25, 23, 0.12));
+  transition: filter 0.35s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform, filter;
+}
+
+.ticket-shadow-wrapper:hover:not(.ticket-stage-centered) {
+  filter: drop-shadow(0 20px 30px rgba(28, 25, 23, 0.20));
+  transform: translateY(-6px) scale(1.015) rotate(-1deg) !important;
+  z-index: 30;
+}
+
+/* Independent Corner Cutout Mask for Main Ticket (4 fixed corner cutouts) */
+.ticket-mask-main {
+  background-color: var(--bg-paper-card);
+  -webkit-mask:
+    radial-gradient(circle 10px at 0 0, #0000 98%, #000 100%) top left,
+    radial-gradient(circle 10px at 100% 0, #0000 98%, #000 100%) top right,
+    radial-gradient(circle 10px at 0 100%, #0000 98%, #000 100%) bottom left,
+    radial-gradient(circle 10px at 100% 100%, #0000 98%, #000 100%) bottom right;
+  -webkit-mask-size: 51% 51%;
+  -webkit-mask-repeat: no-repeat;
+  mask:
+    radial-gradient(circle 10px at 0 0, #0000 98%, #000 100%) top left,
+    radial-gradient(circle 10px at 100% 0, #0000 98%, #000 100%) top right,
+    radial-gradient(circle 10px at 0 100%, #0000 98%, #000 100%) bottom left,
+    radial-gradient(circle 10px at 100% 100%, #0000 98%, #000 100%) bottom right;
+  mask-size: 51% 51%;
+  mask-repeat: no-repeat;
+}
+
+/* Independent Corner Cutout Mask for Ticket Stub (4 fixed corner cutouts) */
+.ticket-mask-stub {
+  background-color: #f4efdf;
+  -webkit-mask:
+    radial-gradient(circle 10px at 0 0, #0000 98%, #000 100%) top left,
+    radial-gradient(circle 10px at 100% 0, #0000 98%, #000 100%) top right,
+    radial-gradient(circle 10px at 0 100%, #0000 98%, #000 100%) bottom left,
+    radial-gradient(circle 10px at 100% 100%, #0000 98%, #000 100%) bottom right;
+  -webkit-mask-size: 51% 51%;
+  -webkit-mask-repeat: no-repeat;
+  mask:
+    radial-gradient(circle 10px at 0 0, #0000 98%, #000 100%) top left,
+    radial-gradient(circle 10px at 100% 0, #0000 98%, #000 100%) top right,
+    radial-gradient(circle 10px at 0 100%, #0000 98%, #000 100%) bottom left,
+    radial-gradient(circle 10px at 100% 100%, #0000 98%, #000 100%) bottom right;
+  mask-size: 51% 51%;
+  mask-repeat: no-repeat;
+}
+
+/* Organic Resting Rotation Skews */
+.ticket-skew-left-1 { transform: rotate(-1.2deg); }
+.ticket-skew-right-1 { transform: rotate(1.1deg); }
+.ticket-skew-left-2 { transform: rotate(-0.8deg); }
+.ticket-skew-right-2 { transform: rotate(1.4deg); }
+
+/* Unified Ticket Perforation Line on Main Ticket Right Edge */
+.ticket-perforation-line {
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  right: -1px;
+  width: 2px;
+  background-image: radial-gradient(circle 1.25px at 50% 50%, #9a8c73 100%, transparent 100%);
+  background-size: 2px 7px;
+  background-repeat: repeat-y;
+  z-index: 20;
+  pointer-events: none;
+}
+
+/* Etched Background Record Layer */
+.etched-paper-text {
+  color: rgba(120, 113, 108, 0.55);
+  font-family: monospace;
+  font-weight: 900;
+  text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.05em;
+}
+
+.etched-paper-box {
+  background-color: rgba(232, 222, 199, 0.45);
+  border: 2.5px dashed rgba(180, 165, 138, 0.6);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* Smooth Rip & Tear Off Keyframe Animation for Ticket Stub */
+@keyframes paper-rip-tear {
+  0% {
+    transform: translateX(0) translateY(0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  20% {
+    transform: translateX(15px) translateY(-10px) rotate(8deg) scale(1.02);
+    opacity: 0.95;
+  }
+  45% {
+    transform: translateX(60px) translateY(-35px) rotate(22deg) scale(1.05);
+    opacity: 0.85;
+  }
+  100% {
+    transform: translateX(350px) translateY(-550px) rotate(70deg) scale(0.6);
+    opacity: 0;
+  }
+}
+
+.animate-stub-tear {
+  animation: paper-rip-tear 0.65s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  transform-origin: top left;
+  pointer-events: none;
+}
+
+/* Ink Stamp Badges */
+.ink-stamp {
+  border: 2px solid currentColor;
+  padding: 0.15rem 0.5rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-radius: 4px;
+  display: inline-block;
+  transform: rotate(-3deg);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.ink-stamp-red {
+  color: #dc2626;
+  border-color: #dc2626;
+  background-color: rgba(220, 38, 38, 0.06);
+}
+
+.ink-stamp-gold {
+  color: #b45309;
+  border-color: #b45309;
+  background-color: rgba(180, 83, 9, 0.06);
+}
+
+.ink-stamp-green {
+  color: #15803d;
+  border-color: #15803d;
+  background-color: rgba(21, 128, 61, 0.06);
+}
+
+.paper-panel {
+  background-color: var(--bg-paper-card);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
